@@ -1,17 +1,17 @@
 //
 // Copyright (c) 2017 CNRS
 //
-// This file is part of tsid
-// tsid is free software: you can redistribute it
+// This file is part of eiquadprog
+// eiquadprog is free software: you can redistribute it
 // and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version
 // 3 of the License, or (at your option) any later version.
-// tsid is distributed in the hope that it will be
+// eiquadprog is distributed in the hope that it will be
 // useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 // of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Lesser Public License for more details. You should have
 // received a copy of the GNU Lesser General Public License along with
-// tsid If not, see
+// eiquadprog If not, see
 // <http://www.gnu.org/licenses/>.
 //
 
@@ -19,7 +19,6 @@
 #define EIQUADPROGFAST_HH_
 
 #include <Eigen/Dense>
-#include <tsid/math/fwd.hpp>
 
 #define OPTIMIZE_STEP_1_2   // compute s(x) = ci^T * x + ci0
 #define OPTIMIZE_COMPUTE_D
@@ -41,8 +40,8 @@
 #define STOP_PROFILER_EIQUADPROG_FAST(x)
 #endif
 
-#define EIQUADPROG_FAST_CHOWLESKY_DECOMPOSITION "EIQUADPROG_FAST Chowlesky dec"
-#define EIQUADPROG_FAST_CHOWLESKY_INVERSE      "EIQUADPROG_FAST Chowlesky inv"
+#define EIQUADPROG_FAST_CHOLESKY_DECOMPOSITION "EIQUADPROG_FAST Cholesky dec"
+#define EIQUADPROG_FAST_CHOLESKY_INVERSE       "EIQUADPROG_FAST Cholesky inv"
 #define EIQUADPROG_FAST_ADD_EQ_CONSTR          "EIQUADPROG_FAST ADD_EQ_CONSTR"
 #define EIQUADPROG_FAST_ADD_EQ_CONSTR_1        "EIQUADPROG_FAST ADD_EQ_CONSTR_1"
 #define EIQUADPROG_FAST_ADD_EQ_CONSTR_2        "EIQUADPROG_FAST ADD_EQ_CONSTR_2"
@@ -57,7 +56,7 @@
 
 #define DEFAULT_MAX_ITER 1000
 
-namespace tsid
+namespace eiquadprog
 {
 
   namespace solvers
@@ -88,7 +87,7 @@ namespace tsid
       EiquadprogFast();
       virtual ~EiquadprogFast();
 
-      void reset(math::Index dim_qp, math::Index num_eq, math::Index num_ineq);
+      void reset(size_t dim_qp, size_t num_eq, size_t num_ineq);
 
       int getMaxIter() const { return m_maxIter; }
 
@@ -104,7 +103,7 @@ namespace tsid
        * @return The size of the active set, namely the number of
        * active constraints (including the equalities).
        */
-      math::Index getActiveSetSize() const { return q; }
+      size_t getActiveSetSize() const { return q; }
 
       /**
        * @return The number of active-set iteratios.
@@ -149,9 +148,9 @@ namespace tsid
       bool is_inverse_provided_;
 
     private:
-      math::Index m_nVars;
-      math::Index m_nEqCon;
-      math::Index m_nIneqCon;
+      size_t m_nVars;
+      size_t m_nEqCon;
+      size_t m_nIneqCon;
 
       int m_maxIter;  /// max number of active-set iterations
       double f_value; /// current value of cost function
@@ -205,7 +204,7 @@ namespace tsid
 #endif
 
       /// size of the active set A (containing the indices of the active constraints)
-      math::Index q;
+      size_t q;
 
       /// number of active-set iterations
       int iter;
@@ -224,7 +223,7 @@ namespace tsid
       inline void update_z(VectorXd & z,
                            const MatrixXd & J,
                            const VectorXd & d,
-                           math::Index iq)
+                           size_t iq)
       {
 #ifdef OPTIMIZE_UPDATE_Z
         z.noalias() = J.rightCols(z.size()-iq) * d.tail(z.size()-iq);
@@ -236,7 +235,7 @@ namespace tsid
       inline void update_r(const MatrixXd & R,
                            VectorXd & r,
                            const VectorXd & d,
-                           math::Index iq)
+                           size_t iq)
       {
         r.head(iq)= d.head(iq);
         R.topLeftCorner(iq,iq).triangularView<Eigen::Upper>().solveInPlace(r.head(iq));
@@ -245,17 +244,17 @@ namespace tsid
       inline bool add_constraint(MatrixXd & R,
                                  MatrixXd & J,
                                  VectorXd & d,
-                                 math::Index& iq, double& R_norm);
+                                 size_t& iq, double& R_norm);
 
       inline void delete_constraint(MatrixXd & R,
                                     MatrixXd & J,
                                     VectorXi & A,
                                     VectorXd & u,
-                                    math::Index nEqCon, math::Index& iq,
-                                    math::Index l);
+                                    size_t nEqCon, size_t& iq,
+                                    size_t l);
     };
 
   } /* namespace solvers */
-} /* namespace tsid */
+} /* namespace eiquadprog */
 
 #endif /* EIQUADPROGFAST_HH_ */
