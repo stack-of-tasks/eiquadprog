@@ -199,9 +199,9 @@ namespace tsid
       VectorXd x_old;           // old value of x <nVars>::d
       VectorXd u_old; // old value of u <nIneqCon+nEqCon>::d
       VectorXi A_old; // old value of A <nIneqCon+nEqCon>::i
-	  
+
 #ifdef OPTIMIZE_ADD_CONSTRAINT
-	  VectorXd T1; /// tmp variable used in add_constraint
+      VectorXd T1; /// tmp variable used in add_constraint
 #endif
 
       /// size of the active set A (containing the indices of the active constraints)
@@ -252,7 +252,7 @@ namespace tsid
                                     VectorXi & A,
                                     VectorXd & u,
                                     math::Index nEqCon, math::Index& iq,
-				    math::Index l);
+                                    math::Index l);
     };
 
   } /* namespace solvers */
