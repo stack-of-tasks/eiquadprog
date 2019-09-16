@@ -403,14 +403,14 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
   Eigen::MatrixXd Aineq(2,4);
   Aineq.setZero();
   Aineq(0,0) =  1.;
-  Aineq(0,1) =  1.;
-  Aineq(1,2) = -1.;
+  Aineq(0,1) = -1.;
+  Aineq(1,2) =  1.;
   Aineq(1,3) = -1.;
 
   Eigen::VectorXd Bineq(4);
   Bineq(0) =  0.;
-  Bineq(1) =  0.;
-  Bineq(2) = -1.;
+  Bineq(1) = -1.;
+  Bineq(2) =  0.;
   Bineq(3) = -1.;
 
   Eigen::VectorXd x(2);
@@ -425,10 +425,10 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  // DOES NOT WORK!?
-  // BOOST_CHECK_CLOSE(out,val,1e-6);
-  //
-  // BOOST_CHECK(x.isApprox(solution));
+//  //DOES NOT WORK!?
+//  BOOST_CHECK_CLOSE(out,val,1e-6);
+
+//  BOOST_CHECK(x.isApprox(solution));
 
   std::cout << "WARNING: test_nonconvex does not work. The test has been temporarily disabled." << std::endl;
 }
