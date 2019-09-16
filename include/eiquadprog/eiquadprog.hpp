@@ -3,7 +3,7 @@
 
 
 /*
- FILE eiquadprog.hh
+ FILE eiquadprog.hpp
  NOTE: this is a modified of uQuadProg++ package, working with Eigen data structures.
  uQuadProg++ is itself a port made by Angelo Furfaro of QuadProg++ originally developed by
  Luca Di Gaspero, working with ublas data structures.
@@ -64,8 +64,6 @@
 #include <Eigen/Cholesky>
 
 #include <iostream>
-
-//#include <tsid/math/fwd.hpp>
 
 namespace Eigen {
 
