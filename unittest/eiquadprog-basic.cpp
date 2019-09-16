@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
   Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet(0);
+  Eigen::VectorXi activeSet(1);
   size_t activeSetSize;
 
   Eigen::VectorXd solution(2);
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE ( test_full )
   Bineq(0) = -3.;
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet;
+  Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
   Eigen::VectorXd solution(1);
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
   Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet;
+  Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
   Bineq(1) = -1;
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet;
+  Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
   Bineq.setZero();
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet;
+  Eigen::VectorXi activeSet(3);
   size_t activeSetSize;
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
   Bineq(3) = -1.;
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet(0);
+  Eigen::VectorXi activeSet(4);
   size_t activeSetSize;
 
   Eigen::VectorXd solution(2);
