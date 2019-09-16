@@ -349,6 +349,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
 }
 
 // min -||x||^2
+// DOES NOT WORK!
 
 BOOST_AUTO_TEST_CASE ( test_unbounded )
 {
