@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE ( test_biased )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
 
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
 
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
 
@@ -244,7 +244,7 @@ BOOST_AUTO_TEST_CASE ( test_full )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
 
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK(status==expected);
+  BOOST_CHECK_EQUAL(status,expected);
 }
 
 // min ||x||^2
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN(status==expected);
+  BOOST_WARN_EQUAL(status,expected);
   BOOST_CHECK(status!=EIQUADPROG_FAST_OPTIMAL);
 }
 
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN(status==expected);
+  BOOST_WARN_EQUAL(status,expected);
   BOOST_CHECK(status!=EIQUADPROG_FAST_OPTIMAL);
 }
 
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE ( test_unbounded )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN(status==expected);
+  BOOST_WARN_EQUAL(status,expected);
 }
 
 // min -||x||^2
@@ -462,7 +462,7 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN(status==expected);
+  BOOST_WARN_EQUAL(status,expected);
 
   BOOST_WARN_CLOSE(qp.getObjValue(),val,1e-6);
 
