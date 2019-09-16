@@ -34,13 +34,13 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq;
+  Eigen::MatrixXd Aeq(2,0);
 
-  Eigen::VectorXd Beq;
+  Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq;
+  Eigen::MatrixXd Aineq(2,0);
 
-  Eigen::VectorXd Bineq;
+  Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
   Eigen::VectorXi activeSet(0);
@@ -71,13 +71,13 @@ BOOST_AUTO_TEST_CASE ( test_biased )
   C(0) = -1.;
   C(1) = -1.;
 
-  Eigen::MatrixXd Aeq;
+  Eigen::MatrixXd Aeq(2,0);
 
-  Eigen::VectorXd Beq;
+  Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq;
+  Eigen::MatrixXd Aineq(2,0);
 
-  Eigen::VectorXd Bineq;
+  Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
   Eigen::VectorXi activeSet(0);
@@ -117,9 +117,9 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
   Eigen::VectorXd Beq(1);
   Beq(0) = -1.;
 
-  Eigen::MatrixXd Aineq;
+  Eigen::MatrixXd Aineq(2,0);
 
-  Eigen::VectorXd Bineq;
+  Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
   Eigen::VectorXi activeSet(0);
@@ -130,6 +130,50 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
   solution(1) = 0.5;
 
   double res = 0.25;
+
+  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+
+  BOOST_CHECK_CLOSE(val,res,1e-6);
+
+  BOOST_CHECK(x.isApprox(solution));
+}
+
+// min ||x||^2
+//    s.t.
+// x[i] >= 1
+
+BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
+{
+  Eigen::MatrixXd Q(2,2);
+  Q.setZero();
+  Q(0,0) = 1.0;
+  Q(1,1) = 1.0;
+
+  Eigen::VectorXd C(2);
+  C.setZero();
+
+  Eigen::MatrixXd Aeq(2,0);
+
+  Eigen::VectorXd Beq(0);
+
+  Eigen::MatrixXd Aineq(2,2);
+  Aineq.setZero();
+  Aineq(0,0) = 1.;
+  Aineq(1,1) = 1.;
+
+  Eigen::VectorXd Bineq(2);
+  Bineq(0) = -1.;
+  Bineq(1) = -1.;
+
+  Eigen::VectorXd x(2);
+  Eigen::VectorXi activeSet(2);
+  size_t activeSetSize;
+
+  Eigen::VectorXd solution(2);
+  solution(0) = 1.;
+  solution(1) = 1.;
+
+  double res = 1.;
 
   double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
