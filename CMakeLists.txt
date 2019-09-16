@@ -23,7 +23,7 @@ INCLUDE(cmake/test.cmake)
 
 SET(PROJECT_NAME eiquadprog)
 SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
-SET(PROJECT_URL "http://github.com/stack-of-tasks/eiquadprog")
+SET(PROJECT_URL "https://gepgitlab.laas.fr/gbuondon/eiquadprog")
 
 # Disable -Werror on Unix for now.
 SET(CXX_DISABLE_WERROR True)
