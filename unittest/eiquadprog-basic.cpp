@@ -49,11 +49,11 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   Eigen::VectorXd solution(2);
   solution.setZero();
 
-  double res = 0.0;
+  double val = 0.0;
 
-  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  BOOST_CHECK_CLOSE(val,res,1e-6);
+  BOOST_CHECK_CLOSE(out,val,1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -87,11 +87,11 @@ BOOST_AUTO_TEST_CASE ( test_biased )
   solution(0) = 1.;
   solution(1) = 1.;
 
-  double res = -1.;
+  double val = -1.;
 
-  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  BOOST_CHECK_CLOSE(val,res,1e-6);
+  BOOST_CHECK_CLOSE(out,val,1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -129,11 +129,11 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
   solution(0) = 0.5;
   solution(1) = 0.5;
 
-  double res = 0.25;
+  double val = 0.25;
 
-  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  BOOST_CHECK_CLOSE(val,res,1e-6);
+  BOOST_CHECK_CLOSE(out,val,1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -173,11 +173,11 @@ BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
   solution(0) = 1.;
   solution(1) = 1.;
 
-  double res = 1.;
+  double val = 1.;
 
-  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  BOOST_CHECK_CLOSE(val,res,1e-6);
+  BOOST_CHECK_CLOSE(out,val,1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
