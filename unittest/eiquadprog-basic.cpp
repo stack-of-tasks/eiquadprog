@@ -34,13 +34,13 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq;
 
-  Eigen::VectorXd Beq(0);
+  Eigen::VectorXd Beq;
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq;
 
-  Eigen::VectorXd Bineq(0);
+  Eigen::VectorXd Bineq;
 
   Eigen::VectorXd x(2);
   Eigen::VectorXi activeSet(0);
@@ -50,6 +50,44 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   solution.setZero();
 
   double res = 0.0;
+
+  double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+
+  BOOST_CHECK_CLOSE(val,res,1e-6);
+
+  BOOST_CHECK(x.isApprox(solution));
+}
+
+// min ||x-x_0||^2, x_0 = (1 1)^T
+
+BOOST_AUTO_TEST_CASE ( test_biased )
+{
+  Eigen::MatrixXd Q(2,2);
+  Q.setZero();
+  Q(0,0) = 1.0;
+  Q(1,1) = 1.0;
+
+  Eigen::VectorXd C(2);
+  C(0) = -1.;
+  C(1) = -1.;
+
+  Eigen::MatrixXd Aeq;
+
+  Eigen::VectorXd Beq;
+
+  Eigen::MatrixXd Aineq;
+
+  Eigen::VectorXd Bineq;
+
+  Eigen::VectorXd x(2);
+  Eigen::VectorXi activeSet(0);
+  size_t activeSetSize;
+
+  Eigen::VectorXd solution(2);
+  solution(0) = 1.;
+  solution(1) = 1.;
+
+  double res = -1.;
 
   double val = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
