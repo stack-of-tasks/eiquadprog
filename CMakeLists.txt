@@ -18,6 +18,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
+INCLUDE(cmake/eigen.cmake)
+INCLUDE(cmake/test.cmake)
 
 SET(PROJECT_NAME eiquadprog)
 SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
@@ -27,30 +29,32 @@ SET(PROJECT_URL "http://github.com/stack-of-tasks/eiquadprog")
 SET(CXX_DISABLE_WERROR True)
 SET(CMAKE_VERBOSE_MAKEFILE True)
 
+SETUP_PROJECT()
+
 # ----------------------------------------------------
 # --- DEPENDENCIES -----------------------------------
 # ----------------------------------------------------
-# ADD_REQUIRED_DEPENDENCY("pinocchio >= 2.1.0")
+ADD_REQUIRED_DEPENDENCY("eigen3")
 
 # ----------------------------------------------------
 # --- INCLUDE ----------------------------------------
 # ----------------------------------------------------
 # Add headers here if any
 SET(${PROJECT_NAME}_HEADERS
-#    include/eiquadprog/fwd.hpp
+    include/eiquadprog/eiquadprog.hpp
   )
 
-# ----------------------------------------------------
-# --- EXECUTABLE -------------------------------------
-# ----------------------------------------------------
-SET(${PROJECT_NAME}_SOURCES
-#    src/main.cpp
-  )
+SET(BOOST_REQUIERED_COMPONENTS "")
+SET(BOOST_BUILD_COMPONENTS unit_test_framework)
+SET(BOOST_OPTIONAL_COMPONENTS "")
 
-# Create the main executable
-#ADD_EXECUTABLE(main ${${PROJECT_NAME}_SOURCES})
-# Link main to its dependencies 
-#PKG_CONFIG_USE_DEPENDENCY(main pinocchio)
+SET(BOOST_COMPONENTS ${BOOST_REQUIERED_COMPONENTS} ${BOOST_OPTIONAL_COMPONENTS} ${BOOST_BUILD_COMPONENTS})
+SEARCH_FOR_BOOST()
+
+# Path to boost headers
+INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # --- PACKAGING ----------------------------------------------------------------
 PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
+
+ADD_SUBDIRECTORY(unittest)
