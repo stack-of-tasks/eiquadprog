@@ -16,6 +16,8 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+# Temporary
+OPTION(INSTALL_DOCUMENTATION "Generate and install the documentation" OFF)
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/eigen.cmake)
@@ -43,6 +45,11 @@ ADD_REQUIRED_DEPENDENCY("eigen3")
 SET(${PROJECT_NAME}_HEADERS
     include/eiquadprog/eiquadprog.hpp
   )
+
+FOREACH(header ${${PROJECT_NAME}_HEADERS})
+  INSTALL(FILES ${${PROJECT_NAME}_SOURCE_DIR}/${header} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/eiquadprog
+          PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE)
+ENDFOREACH(header)
 
 SET(BOOST_REQUIERED_COMPONENTS "")
 SET(BOOST_BUILD_COMPONENTS unit_test_framework)
