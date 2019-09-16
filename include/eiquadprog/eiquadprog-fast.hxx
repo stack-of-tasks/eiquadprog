@@ -290,7 +290,7 @@ namespace eiquadprog
       size_t iq;       // current number of active constraints
       double psi;   // current sum of constraint violations
       double c1;    // Hessian trace
-      double c2;    // Hessian Chowlesky factor trace
+      double c2;    // Hessian Cholesky factor trace
       double ss;    // largest constraint violation (negative for violation)
       double R_norm;  // norm of matrix R
       const double inf = std::numeric_limits<double>::infinity();
@@ -309,9 +309,9 @@ namespace eiquadprog
       /* decompose the matrix Hess in the form LL^T */
       if(!is_inverse_provided_)
       {
-        START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOWLESKY_DECOMPOSITION);
+        START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOLESKY_DECOMPOSITION);
         chol_.compute(Hess);
-        STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOWLESKY_DECOMPOSITION);
+        STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOLESKY_DECOMPOSITION);
       }
 
 
@@ -324,14 +324,14 @@ namespace eiquadprog
       // m_J = L^-T
       if(!is_inverse_provided_)
       {
-        START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOWLESKY_INVERSE);
+        START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOLESKY_INVERSE);
         m_J.setIdentity(nVars, nVars);
 #ifdef OPTIMIZE_HESSIAN_INVERSE
         chol_.matrixU().solveInPlace(m_J);
 #else
         m_J = chol_.matrixU().solve(m_J);
 #endif
-        STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOWLESKY_INVERSE);
+        STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOLESKY_INVERSE);
       }
 
       c2 = m_J.trace();
