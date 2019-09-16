@@ -266,6 +266,8 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 
   // DOES NOT WORK!?
   // BOOST_CHECK(std::isinf(out));
+
+  std::cout << "WARNING: test_unfeasible_equalities does not work. The test has been temporarily disabled." << std::endl;
 }
 
 // min ||x||^2
@@ -374,6 +376,8 @@ BOOST_AUTO_TEST_CASE ( test_unbounded )
 
   // DOES NOT WORK!?
   // BOOST_CHECK(std::isinf(out));
+
+  std::cout << "WARNING: test_unbounded does not work. The test has been temporarily disabled." << std::endl;
 }
 
 // min -||x||^2
@@ -425,6 +429,8 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
   // BOOST_CHECK_CLOSE(out,val,1e-6);
   //
   // BOOST_CHECK(x.isApprox(solution));
+
+  std::cout << "WARNING: test_nonconvex does not work. The test has been temporarily disabled." << std::endl;
 }
 
 BOOST_AUTO_TEST_SUITE_END ()
