@@ -15,8 +15,8 @@
 // <http://www.gnu.org/licenses/>.
 //
 
-#ifndef EIQUADPROGFAST_HH_
-#define EIQUADPROGFAST_HH_
+#ifndef EIQUADPROGFAST_HPP_
+#define EIQUADPROGFAST_HPP_
 
 #include <Eigen/Dense>
 
@@ -257,4 +257,7 @@ namespace eiquadprog
   } /* namespace solvers */
 } /* namespace eiquadprog */
 
-#endif /* EIQUADPROGFAST_HH_ */
+/* --- Details -------------------------------------------------------------------- */
+#include "eiquadprog/eiquadprog-fast.hxx"
+
+#endif /* EIQUADPROGFAST_HPP_ */
