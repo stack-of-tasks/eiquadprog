@@ -305,5 +305,46 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
   BOOST_CHECK(std::isinf(out));
 }
 
+// min ||x-x_0||^2, x_0 = (1 1)^T
+//    s.t.
+// x[1] = 1 - x[0]
+// x[0] <= 0
+// x[1] <= 0
+
+BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
+{
+  Eigen::MatrixXd Q(2,2);
+  Q.setZero();
+  Q(0,0) = 1.0;
+  Q(1,1) = 1.0;
+
+  Eigen::VectorXd C(2);
+  C(0) = -1.;
+  C(1) = -1.;
+
+  Eigen::MatrixXd Aeq(2,1);
+  Aeq(0,0) = 1.;
+  Aeq(1,0) = 1.;
+
+  Eigen::VectorXd Beq(1);
+  Beq(0) = -1.;
+
+  Eigen::MatrixXd Aineq(2,2);
+  Aineq.setZero();
+  Aineq(0,0) = -1.;
+  Aineq(1,1) = -1.;
+
+  Eigen::VectorXd Bineq(2);
+  Bineq.setZero();
+
+  Eigen::VectorXd x(2);
+  Eigen::VectorXi activeSet;
+  size_t activeSetSize;
+
+  double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+
+  BOOST_CHECK(std::isinf(out));
+}
+
 BOOST_AUTO_TEST_SUITE_END ()
 
