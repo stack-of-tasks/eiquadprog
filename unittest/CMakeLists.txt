@@ -2,6 +2,7 @@
 #test paths and names (without .cpp extension)
 SET (TESTS
   eiquadprog-basic
+  eiquadprog-fast
   )
 
 # --- MACROS ------------------------------------------------------------------

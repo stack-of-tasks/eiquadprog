@@ -43,6 +43,7 @@ ADD_REQUIRED_DEPENDENCY("eigen3")
 # Add headers here if any
 SET(${PROJECT_NAME}_HEADERS
     include/eiquadprog/eiquadprog.hpp
+    include/eiquadprog/eiquadprog-fast.hpp
   )
 
 INSTALL(FILES
