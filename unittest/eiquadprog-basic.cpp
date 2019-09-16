@@ -264,10 +264,8 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-  // DOES NOT WORK!?
-  // BOOST_CHECK(std::isinf(out));
-
-  std::cout << "WARNING: test_unfeasible_equalities does not work. The test has been temporarily disabled." << std::endl;
+  //DOES NOT WORK!?
+  BOOST_WARN(std::isinf(out));
 }
 
 // min ||x||^2
@@ -376,9 +374,7 @@ BOOST_AUTO_TEST_CASE ( test_unbounded )
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
   // DOES NOT WORK!?
-  // BOOST_CHECK(std::isinf(out));
-
-  std::cout << "WARNING: test_unbounded does not work. The test has been temporarily disabled." << std::endl;
+  BOOST_WARN(std::isinf(out));
 }
 
 // min -||x||^2
@@ -426,12 +422,10 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
 
   double out = Eigen::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
-//  //DOES NOT WORK!?
-//  BOOST_CHECK_CLOSE(out,val,1e-6);
+  //DOES NOT WORK!?
+  BOOST_WARN_CLOSE(out,val,1e-6);
 
-//  BOOST_CHECK(x.isApprox(solution));
-
-  std::cout << "WARNING: test_nonconvex does not work. The test has been temporarily disabled." << std::endl;
+  BOOST_WARN(x.isApprox(solution));
 }
 
 BOOST_AUTO_TEST_SUITE_END ()
