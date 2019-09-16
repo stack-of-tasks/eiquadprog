@@ -16,8 +16,6 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-# Temporary
-OPTION(INSTALL_DOCUMENTATION "Generate and install the documentation" OFF)
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/eigen.cmake)
@@ -65,3 +63,5 @@ INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIRS})
 PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
 
 ADD_SUBDIRECTORY(unittest)
+
+SETUP_PROJECT_FINALIZE()
