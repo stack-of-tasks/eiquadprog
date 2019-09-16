@@ -24,6 +24,7 @@ INCLUDE(cmake/test.cmake)
 SET(PROJECT_NAME eiquadprog)
 SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
 SET(PROJECT_URL "https://gepgitlab.laas.fr/gbuondon/eiquadprog")
+SET(PROJECT_CUSTOM_HEADER_EXTENSION "hpp")
 
 # Disable -Werror on Unix for now.
 SET(CXX_DISABLE_WERROR True)
