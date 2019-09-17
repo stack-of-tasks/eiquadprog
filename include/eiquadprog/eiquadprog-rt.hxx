@@ -51,7 +51,7 @@ namespace eiquadprog
       double cc, ss, h, t1, t2, xny;
 
 #ifdef OPTIMIZE_ADD_CONSTRAINT
-	  Eigen::Vector2d cc_ss;
+      Eigen::Vector2d cc_ss;
 #endif
 
       /* we have to find the Givens rotation which will reduce the element
@@ -85,14 +85,14 @@ namespace eiquadprog
         else
           d(j - 1) = h;
         xny = ss / (1.0 + cc);
-		
+
 // #define OPTIMIZE_ADD_CONSTRAINT
 #ifdef OPTIMIZE_ADD_CONSTRAINT // the optimized code is actually slower than the original
-		T1 = J.col(j-1);
-		cc_ss(0) = cc;
-		cc_ss(1) = ss;
-		J.col(j-1).noalias() = J.template middleCols<2>(j-1) * cc_ss;
-		J.col(j) = xny * (T1 + J.col(j - 1)) - J.col(j);
+        T1 = J.col(j-1);
+        cc_ss(0) = cc;
+        cc_ss(1) = ss;
+        J.col(j-1).noalias() = J.template middleCols<2>(j-1) * cc_ss;
+        J.col(j) = xny * (T1 + J.col(j - 1)) - J.col(j);
 #else
         // J.col(j-1) = J[:,j-1:j] * [cc; ss]
         for (k = 0; k < nVars; k++)

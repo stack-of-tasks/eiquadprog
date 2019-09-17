@@ -217,7 +217,7 @@ namespace eiquadprog
 #ifdef OPTIMIZE_ADD_CONSTRAINT
       typename RtVectorX<nVars>::d T1;           // tmp vector
 #endif
-	  
+
       /// size of the active set A (containing the indices of the active constraints)
       int q;
 
