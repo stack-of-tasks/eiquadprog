@@ -4,6 +4,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 SET (TESTS
   eiquadprog-basic
   eiquadprog-fast
+  eiquadprog-rt
   )
 
 FOREACH(test ${TESTS})
