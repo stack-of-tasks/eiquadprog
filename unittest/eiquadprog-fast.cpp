@@ -32,11 +32,11 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(2,0);
+  Eigen::MatrixXd Aeq(0,2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(2,0);
+  Eigen::MatrixXd Aineq(0,2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -74,17 +74,15 @@ BOOST_AUTO_TEST_CASE ( test_biased )
   C(0) = -1.;
   C(1) = -1.;
 
-  Eigen::MatrixXd Aeq(2,0);
+  Eigen::MatrixXd Aeq(0,2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(2,0);
+  Eigen::MatrixXd Aineq(0,2);
 
   Eigen::VectorXd Bineq(0);
 
   Eigen::VectorXd x(2);
-  Eigen::VectorXi activeSet(0);
-  size_t activeSetSize;
 
   Eigen::VectorXd solution(2);
   solution(0) = 1.;
