@@ -10,7 +10,7 @@ using namespace eiquadprog::solvers;
 
 /**
  * solves the problem
- * min. x' Hess x + 2 g0' x
+ * min. 0.5 * x' Hess x + g0' x
  * s.t. CE x + ce0 = 0
  *      CI x + ci0 >= 0
  */
@@ -251,8 +251,8 @@ BOOST_AUTO_TEST_CASE ( test_full )
 
 // min ||x||^2
 //    s.t.
-// x[0] = -1
 // x[0] =  1
+// x[0] = -1
 
 BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 {
@@ -443,10 +443,10 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
   Aineq(3,1) = -1.;
 
   Eigen::VectorXd Bineq(4);
-  Bineq(0) =  0.;
-  Bineq(1) = -1.;
-  Bineq(2) =  0.;
-  Bineq(3) = -1.;
+  Bineq(0) = 0.;
+  Bineq(1) = 1.;
+  Bineq(2) = 0.;
+  Bineq(3) = 1.;
 
   Eigen::VectorXd x(2);
 
@@ -460,7 +460,7 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status,expected);
 
   BOOST_WARN_CLOSE(qp.getObjValue(),val,1e-6);
 
