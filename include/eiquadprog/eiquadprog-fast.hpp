@@ -7,7 +7,7 @@
 
 #include <Eigen/Dense>
 
-#define OPTIMIZE_STEP_1_2   // compute s(x) = ci^T * x + ci0
+#define OPTIMIZE_STEP_1_2  // compute s(x) = ci^T * x + ci0
 #define OPTIMIZE_COMPUTE_D
 #define OPTIMIZE_UPDATE_Z
 #define OPTIMIZE_HESSIAN_INVERSE
@@ -21,227 +21,197 @@
 
 #ifdef PROFILE_EIQUADPROG
 #define START_PROFILER_EIQUADPROG_FAST(x) START_PROFILER(x)
-#define STOP_PROFILER_EIQUADPROG_FAST(x)  STOP_PROFILER(x)
+#define STOP_PROFILER_EIQUADPROG_FAST(x) STOP_PROFILER(x)
 #else
 #define START_PROFILER_EIQUADPROG_FAST(x)
 #define STOP_PROFILER_EIQUADPROG_FAST(x)
 #endif
 
 #define EIQUADPROG_FAST_CHOLESKY_DECOMPOSITION "EIQUADPROG_FAST Cholesky dec"
-#define EIQUADPROG_FAST_CHOLESKY_INVERSE       "EIQUADPROG_FAST Cholesky inv"
-#define EIQUADPROG_FAST_ADD_EQ_CONSTR          "EIQUADPROG_FAST ADD_EQ_CONSTR"
-#define EIQUADPROG_FAST_ADD_EQ_CONSTR_1        "EIQUADPROG_FAST ADD_EQ_CONSTR_1"
-#define EIQUADPROG_FAST_ADD_EQ_CONSTR_2        "EIQUADPROG_FAST ADD_EQ_CONSTR_2"
-#define EIQUADPROG_FAST_STEP_1                 "EIQUADPROG_FAST STEP_1"
-#define EIQUADPROG_FAST_STEP_1_1               "EIQUADPROG_FAST STEP_1_1"
-#define EIQUADPROG_FAST_STEP_1_2               "EIQUADPROG_FAST STEP_1_2"
-#define EIQUADPROG_FAST_STEP_1_UNCONSTR_MINIM  "EIQUADPROG_FAST STEP_1_UNCONSTR_MINIM"
-#define EIQUADPROG_FAST_STEP_2                 "EIQUADPROG_FAST STEP_2"
-#define EIQUADPROG_FAST_STEP_2A                "EIQUADPROG_FAST STEP_2A"
-#define EIQUADPROG_FAST_STEP_2B                "EIQUADPROG_FAST STEP_2B"
-#define EIQUADPROG_FAST_STEP_2C                "EIQUADPROG_FAST STEP_2C"
+#define EIQUADPROG_FAST_CHOLESKY_INVERSE "EIQUADPROG_FAST Cholesky inv"
+#define EIQUADPROG_FAST_ADD_EQ_CONSTR "EIQUADPROG_FAST ADD_EQ_CONSTR"
+#define EIQUADPROG_FAST_ADD_EQ_CONSTR_1 "EIQUADPROG_FAST ADD_EQ_CONSTR_1"
+#define EIQUADPROG_FAST_ADD_EQ_CONSTR_2 "EIQUADPROG_FAST ADD_EQ_CONSTR_2"
+#define EIQUADPROG_FAST_STEP_1 "EIQUADPROG_FAST STEP_1"
+#define EIQUADPROG_FAST_STEP_1_1 "EIQUADPROG_FAST STEP_1_1"
+#define EIQUADPROG_FAST_STEP_1_2 "EIQUADPROG_FAST STEP_1_2"
+#define EIQUADPROG_FAST_STEP_1_UNCONSTR_MINIM "EIQUADPROG_FAST STEP_1_UNCONSTR_MINIM"
+#define EIQUADPROG_FAST_STEP_2 "EIQUADPROG_FAST STEP_2"
+#define EIQUADPROG_FAST_STEP_2A "EIQUADPROG_FAST STEP_2A"
+#define EIQUADPROG_FAST_STEP_2B "EIQUADPROG_FAST STEP_2B"
+#define EIQUADPROG_FAST_STEP_2C "EIQUADPROG_FAST STEP_2C"
 
 #define DEFAULT_MAX_ITER 1000
 
-namespace eiquadprog
-{
+namespace eiquadprog {
 
-  namespace solvers
-  {
+namespace solvers {
 
-    /**
-    * Possible states of the solver.
-    */
-    enum EiquadprogFast_status
-    {
-      EIQUADPROG_FAST_OPTIMAL=0,
-      EIQUADPROG_FAST_INFEASIBLE=1,
-      EIQUADPROG_FAST_UNBOUNDED=2,
-      EIQUADPROG_FAST_MAX_ITER_REACHED=3,
-      EIQUADPROG_FAST_REDUNDANT_EQUALITIES=4
-    };
+/**
+ * Possible states of the solver.
+ */
+enum EiquadprogFast_status {
+  EIQUADPROG_FAST_OPTIMAL = 0,
+  EIQUADPROG_FAST_INFEASIBLE = 1,
+  EIQUADPROG_FAST_UNBOUNDED = 2,
+  EIQUADPROG_FAST_MAX_ITER_REACHED = 3,
+  EIQUADPROG_FAST_REDUNDANT_EQUALITIES = 4
+};
 
-    class EiquadprogFast
-    {
-      typedef Eigen::MatrixXd MatrixXd;
-      typedef Eigen::VectorXd VectorXd;
-      typedef Eigen::VectorXi VectorXi;
+class EiquadprogFast {
+  typedef Eigen::MatrixXd MatrixXd;
+  typedef Eigen::VectorXd VectorXd;
+  typedef Eigen::VectorXi VectorXi;
 
-    public:
-      
-      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-      EiquadprogFast();
-      virtual ~EiquadprogFast();
+  EiquadprogFast();
+  virtual ~EiquadprogFast();
 
-      void reset(size_t dim_qp, size_t num_eq, size_t num_ineq);
+  void reset(size_t dim_qp, size_t num_eq, size_t num_ineq);
 
-      int getMaxIter() const { return m_maxIter; }
+  int getMaxIter() const { return m_maxIter; }
 
-      bool setMaxIter(int maxIter)
-      {
-        if(maxIter<0)
-          return false;
-        m_maxIter = maxIter;
-        return true;
-      }
+  bool setMaxIter(int maxIter) {
+    if (maxIter < 0) return false;
+    m_maxIter = maxIter;
+    return true;
+  }
 
-      /**
-       * @return The size of the active set, namely the number of
-       * active constraints (including the equalities).
-       */
-      size_t getActiveSetSize() const { return q; }
+  /**
+   * @return The size of the active set, namely the number of
+   * active constraints (including the equalities).
+   */
+  size_t getActiveSetSize() const { return q; }
 
-      /**
-       * @return The number of active-set iteratios.
-       */
-      int getIteratios() const { return iter; }
+  /**
+   * @return The number of active-set iteratios.
+   */
+  int getIteratios() const { return iter; }
 
-      /**
-       * @return The value of the objective function.
-       */
-      double getObjValue() const { return f_value; }
+  /**
+   * @return The value of the objective function.
+   */
+  double getObjValue() const { return f_value; }
 
-      /**
-       * @return The Lagrange multipliers
-       */
-      const VectorXd & getLagrangeMultipliers() const { return u; }
+  /**
+   * @return The Lagrange multipliers
+   */
+  const VectorXd& getLagrangeMultipliers() const { return u; }
 
-      /**
-       * Return the active set, namely the indeces of active constraints.
-       * The first nEqCon indexes are for the equalities and are negative.
-       * The last nIneqCon indexes are for the inequalities and start from 0.
-       * Only the first q elements of the return vector are valid, where q
-       * is the size of the active set.
-       * @return The set of indexes of the active constraints.
-       */
-      const VectorXi & getActiveSet() const { return A; }
+  /**
+   * Return the active set, namely the indeces of active constraints.
+   * The first nEqCon indexes are for the equalities and are negative.
+   * The last nIneqCon indexes are for the inequalities and start from 0.
+   * Only the first q elements of the return vector are valid, where q
+   * is the size of the active set.
+   * @return The set of indexes of the active constraints.
+   */
+  const VectorXi& getActiveSet() const { return A; }
 
-      /**
-       * solves the problem
-       * min. x' Hess x + 2 g0' x
-       * s.t. CE x + ce0 = 0
-       *      CI x + ci0 >= 0
-       */
-       EiquadprogFast_status solve_quadprog(const MatrixXd & Hess,
-                                            const VectorXd & g0,
-                                            const MatrixXd & CE,
-                                            const VectorXd & ce0,
-                                            const MatrixXd & CI,
-                                            const VectorXd & ci0,
-                                            VectorXd & x);
+  /**
+   * solves the problem
+   * min. x' Hess x + 2 g0' x
+   * s.t. CE x + ce0 = 0
+   *      CI x + ci0 >= 0
+   */
+  EiquadprogFast_status solve_quadprog(const MatrixXd& Hess, const VectorXd& g0, const MatrixXd& CE,
+                                       const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0, VectorXd& x);
 
-      MatrixXd m_J; // J * J' = Hessian <nVars,nVars>::d
-      bool is_inverse_provided_;
+  MatrixXd m_J;  // J * J' = Hessian <nVars,nVars>::d
+  bool is_inverse_provided_;
 
-    private:
-      size_t m_nVars;
-      size_t m_nEqCon;
-      size_t m_nIneqCon;
+ private:
+  size_t m_nVars;
+  size_t m_nEqCon;
+  size_t m_nIneqCon;
 
-      int m_maxIter;  /// max number of active-set iterations
-      double f_value; /// current value of cost function
+  int m_maxIter;   /// max number of active-set iterations
+  double f_value;  /// current value of cost function
 
-      Eigen::LLT<MatrixXd,Eigen::Lower> chol_; // <nVars,nVars>::d
+  Eigen::LLT<MatrixXd, Eigen::Lower> chol_;  // <nVars,nVars>::d
 
-      /// from QR of L' N, where L is Cholewsky factor of Hessian, and N is the matrix of active constraints
-      MatrixXd R; // <nVars,nVars>::d
+  /// from QR of L' N, where L is Cholewsky factor of Hessian, and N is the matrix of active constraints
+  MatrixXd R;  // <nVars,nVars>::d
 
-      /// CI*x+ci0
-      VectorXd s; // <nIneqCon>::d
+  /// CI*x+ci0
+  VectorXd s;  // <nIneqCon>::d
 
-      /// infeasibility multipliers, i.e. negative step direction in dual space
-      VectorXd r; // <nIneqCon+nEqCon>::d
+  /// infeasibility multipliers, i.e. negative step direction in dual space
+  VectorXd r;  // <nIneqCon+nEqCon>::d
 
-      /// Lagrange multipliers
-      VectorXd u; // <nIneqCon+nEqCon>::d
+  /// Lagrange multipliers
+  VectorXd u;  // <nIneqCon+nEqCon>::d
 
-      /// step direction in primal space
-      VectorXd z; // <nVars>::d
+  /// step direction in primal space
+  VectorXd z;  // <nVars>::d
 
-      /// J' np
-      VectorXd d; //<nVars>::d
+  /// J' np
+  VectorXd d;  //<nVars>::d
 
-      /// current constraint normal
-      VectorXd np; //<nVars>::d
+  /// current constraint normal
+  VectorXd np;  //<nVars>::d
 
-      /// active set (indeces of active constraints)
-      /// the first nEqCon indeces are for the equalities and are negative
-      /// the last nIneqCon indeces are for the inequalities are start from 0
-      VectorXi A; // <nIneqCon+nEqCon>
+  /// active set (indeces of active constraints)
+  /// the first nEqCon indeces are for the equalities and are negative
+  /// the last nIneqCon indeces are for the inequalities are start from 0
+  VectorXi A;  // <nIneqCon+nEqCon>
 
-      /// initialized as K \ A
-      /// iai(i)=-1 iff inequality constraint i is in the active set
-      /// iai(i)=i otherwise
-      VectorXi iai; // <nIneqCon>::i
+  /// initialized as K \ A
+  /// iai(i)=-1 iff inequality constraint i is in the active set
+  /// iai(i)=i otherwise
+  VectorXi iai;  // <nIneqCon>::i
 
-      /// initialized as [1, ..., 1, .]
-      /// if iaexcl(i)!=1 inequality constraint i cannot be added to the active set
-      /// if adding ineq constraint i fails => iaexcl(i)=0
-      /// iaexcl(i)=0 iff ineq constraint i is linearly dependent to other active constraints
-      /// iaexcl(i)=1 otherwise
-      VectorXi iaexcl; //<nIneqCon>::i
+  /// initialized as [1, ..., 1, .]
+  /// if iaexcl(i)!=1 inequality constraint i cannot be added to the active set
+  /// if adding ineq constraint i fails => iaexcl(i)=0
+  /// iaexcl(i)=0 iff ineq constraint i is linearly dependent to other active constraints
+  /// iaexcl(i)=1 otherwise
+  VectorXi iaexcl;  //<nIneqCon>::i
 
-      VectorXd x_old;           // old value of x <nVars>::d
-      VectorXd u_old; // old value of u <nIneqCon+nEqCon>::d
-      VectorXi A_old; // old value of A <nIneqCon+nEqCon>::i
+  VectorXd x_old;  // old value of x <nVars>::d
+  VectorXd u_old;  // old value of u <nIneqCon+nEqCon>::d
+  VectorXi A_old;  // old value of A <nIneqCon+nEqCon>::i
 
 #ifdef OPTIMIZE_ADD_CONSTRAINT
-      VectorXd T1; /// tmp variable used in add_constraint
+  VectorXd T1;  /// tmp variable used in add_constraint
 #endif
 
-      /// size of the active set A (containing the indices of the active constraints)
-      size_t q;
+  /// size of the active set A (containing the indices of the active constraints)
+  size_t q;
 
-      /// number of active-set iterations
-      int iter;
+  /// number of active-set iterations
+  int iter;
 
-      inline void compute_d(VectorXd & d,
-                            const MatrixXd & J,
-                            const VectorXd & np)
-      {
+  inline void compute_d(VectorXd& d, const MatrixXd& J, const VectorXd& np) {
 #ifdef OPTIMIZE_COMPUTE_D
-        d.noalias() = J.adjoint() * np;
+    d.noalias() = J.adjoint() * np;
 #else
-        d = J.adjoint() * np;
+    d = J.adjoint() * np;
 #endif
-      }
+  }
 
-      inline void update_z(VectorXd & z,
-                           const MatrixXd & J,
-                           const VectorXd & d,
-                           size_t iq)
-      {
+  inline void update_z(VectorXd& z, const MatrixXd& J, const VectorXd& d, size_t iq) {
 #ifdef OPTIMIZE_UPDATE_Z
-        z.noalias() = J.rightCols(z.size()-iq) * d.tail(z.size()-iq);
+    z.noalias() = J.rightCols(z.size() - iq) * d.tail(z.size() - iq);
 #else
-        z = J.rightCols(J.cols()-iq) * d.tail(J.cols()-iq);
+    z = J.rightCols(J.cols() - iq) * d.tail(J.cols() - iq);
 #endif
-      }
+  }
 
-      inline void update_r(const MatrixXd & R,
-                           VectorXd & r,
-                           const VectorXd & d,
-                           size_t iq)
-      {
-        r.head(iq)= d.head(iq);
-        R.topLeftCorner(iq,iq).triangularView<Eigen::Upper>().solveInPlace(r.head(iq));
-      }
+  inline void update_r(const MatrixXd& R, VectorXd& r, const VectorXd& d, size_t iq) {
+    r.head(iq) = d.head(iq);
+    R.topLeftCorner(iq, iq).triangularView<Eigen::Upper>().solveInPlace(r.head(iq));
+  }
 
-      inline bool add_constraint(MatrixXd & R,
-                                 MatrixXd & J,
-                                 VectorXd & d,
-                                 size_t& iq, double& R_norm);
+  inline bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R_norm);
 
-      inline void delete_constraint(MatrixXd & R,
-                                    MatrixXd & J,
-                                    VectorXi & A,
-                                    VectorXd & u,
-                                    size_t nEqCon, size_t& iq,
-                                    size_t l);
-    };
+  inline void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_t nEqCon, size_t& iq,
+                                size_t l);
+};
 
-  } /* namespace solvers */
+} /* namespace solvers */
 } /* namespace eiquadprog */
 
 /* --- Details -------------------------------------------------------------------- */

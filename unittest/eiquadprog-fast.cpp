@@ -15,28 +15,27 @@ using namespace eiquadprog::solvers;
  *      CI x + ci0 >= 0
  */
 
-BOOST_AUTO_TEST_SUITE ( BOOST_TEST_MODULE )
+BOOST_AUTO_TEST_SUITE(BOOST_TEST_MODULE)
 
 // min ||x||^2
 
-BOOST_AUTO_TEST_CASE ( test_unbiased )
-{
+BOOST_AUTO_TEST_CASE(test_unbiased) {
   EiquadprogFast qp;
-  qp.reset(2,0,0);
+  qp.reset(2, 0, 0);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq(0, 2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -51,34 +50,33 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
 
 // min ||x-x_0||^2, x_0 = (1 1)^T
 
-BOOST_AUTO_TEST_CASE ( test_biased )
-{
+BOOST_AUTO_TEST_CASE(test_biased) {
   EiquadprogFast qp;
-  qp.reset(2,0,0);
+  qp.reset(2, 0, 0);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C(0) = -1.;
   C(1) = -1.;
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq(0, 2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -94,9 +92,9 @@ BOOST_AUTO_TEST_CASE ( test_biased )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -105,27 +103,26 @@ BOOST_AUTO_TEST_CASE ( test_biased )
 //    s.t.
 // x[1] = 1 - x[0]
 
-BOOST_AUTO_TEST_CASE ( test_equality_constraints )
-{
+BOOST_AUTO_TEST_CASE(test_equality_constraints) {
   EiquadprogFast qp;
-  qp.reset(2,1,0);
+  qp.reset(2, 1, 0);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(1,2);
-  Aeq(0,0) = 1.;
-  Aeq(0,1) = 1.;
+  Eigen::MatrixXd Aeq(1, 2);
+  Aeq(0, 0) = 1.;
+  Aeq(0, 1) = 1.;
 
   Eigen::VectorXd Beq(1);
   Beq(0) = -1.;
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq(0, 2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -141,9 +138,9 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -152,27 +149,26 @@ BOOST_AUTO_TEST_CASE ( test_equality_constraints )
 //    s.t.
 // x[i] >= 1
 
-BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
-{
+BOOST_AUTO_TEST_CASE(test_inequality_constraints) {
   EiquadprogFast qp;
-  qp.reset(2,0,2);
+  qp.reset(2, 0, 2);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(2,2);
+  Eigen::MatrixXd Aineq(2, 2);
   Aineq.setZero();
-  Aineq(0,0) = 1.;
-  Aineq(1,1) = 1.;
+  Aineq(0, 0) = 1.;
+  Aineq(1, 1) = 1.;
 
   Eigen::VectorXd Bineq(2);
   Bineq(0) = -1.;
@@ -190,9 +186,9 @@ BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -202,30 +198,29 @@ BOOST_AUTO_TEST_CASE ( test_inequality_constraints )
 // x[1] = 5 - x[0]
 // x[1] >= 3
 
-BOOST_AUTO_TEST_CASE ( test_full )
-{
+BOOST_AUTO_TEST_CASE(test_full) {
   EiquadprogFast qp;
-  qp.reset(2,1,1);
+  qp.reset(2, 1, 1);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C(0) = -1.;
   C(1) = -1.;
 
-  Eigen::MatrixXd Aeq(1,2);
-  Aeq(0,0) = 1.;
-  Aeq(0,1) = 1.;
+  Eigen::MatrixXd Aeq(1, 2);
+  Aeq(0, 0) = 1.;
+  Aeq(0, 1) = 1.;
 
   Eigen::VectorXd Beq(1);
   Beq(0) = -5.;
 
-  Eigen::MatrixXd Aineq(1,2);
+  Eigen::MatrixXd Aineq(1, 2);
   Aineq.setZero();
-  Aineq(0,1) = 1.;
+  Aineq(0, 1) = 1.;
 
   Eigen::VectorXd Bineq(1);
   Bineq(0) = -3.;
@@ -242,9 +237,9 @@ BOOST_AUTO_TEST_CASE ( test_full )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_CHECK_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_CHECK(x.isApprox(solution));
 }
@@ -254,29 +249,28 @@ BOOST_AUTO_TEST_CASE ( test_full )
 // x[0] =  1
 // x[0] = -1
 
-BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
-{
+BOOST_AUTO_TEST_CASE(test_unfeasible_equalities) {
   EiquadprogFast qp;
-  qp.reset(2,2,0);
+  qp.reset(2, 2, 0);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(2,2);
+  Eigen::MatrixXd Aeq(2, 2);
   Aeq.setZero();
-  Aeq(0,0) = 1.;
-  Aeq(1,0) = 1.;
+  Aeq(0, 0) = 1.;
+  Aeq(1, 0) = 1.;
 
   Eigen::VectorXd Beq(2);
   Beq(0) = -1.;
-  Beq(1) =  1.;
+  Beq(1) = 1.;
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq(0, 2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -286,7 +280,7 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 }
 
 // min ||x||^2
@@ -296,27 +290,26 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
 //
 // correctly fails, but returns wrong error code
 
-BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
-{
+BOOST_AUTO_TEST_CASE(test_unfeasible_inequalities) {
   EiquadprogFast qp;
-  qp.reset(2,0,2);
+  qp.reset(2, 0, 2);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(2,2);
+  Eigen::MatrixXd Aineq(2, 2);
   Aineq.setZero();
-  Aineq(0,0) = 1.;
-  Aineq(1,0) = -1.;
+  Aineq(0, 0) = 1.;
+  Aineq(1, 0) = -1.;
 
   Eigen::VectorXd Bineq(2);
   Bineq(0) = -1;
@@ -328,8 +321,8 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN_EQUAL(status,expected);
-  BOOST_CHECK(status!=EIQUADPROG_FAST_OPTIMAL);
+  BOOST_WARN_EQUAL(status, expected);
+  BOOST_CHECK(status != EIQUADPROG_FAST_OPTIMAL);
 }
 
 // min ||x-x_0||^2, x_0 = (1 1)^T
@@ -340,31 +333,30 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_inequalities )
 //
 // correctly fails, but returns wrong error code
 
-BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
-{
+BOOST_AUTO_TEST_CASE(test_unfeasible_constraints) {
   EiquadprogFast qp;
-  qp.reset(2,1,2);
+  qp.reset(2, 1, 2);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = 1.0;
-  Q(1,1) = 1.0;
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
 
   Eigen::VectorXd C(2);
   C(0) = -1.;
   C(1) = -1.;
 
-  Eigen::MatrixXd Aeq(1,2);
-  Aeq(0,0) = 1.;
-  Aeq(0,1) = 1.;
+  Eigen::MatrixXd Aeq(1, 2);
+  Aeq(0, 0) = 1.;
+  Aeq(0, 1) = 1.;
 
   Eigen::VectorXd Beq(1);
   Beq(0) = -1.;
 
-  Eigen::MatrixXd Aineq(2,2);
+  Eigen::MatrixXd Aineq(2, 2);
   Aineq.setZero();
-  Aineq(0,0) = -1.;
-  Aineq(1,1) = -1.;
+  Aineq(0, 0) = -1.;
+  Aineq(1, 1) = -1.;
 
   Eigen::VectorXd Bineq(2);
   Bineq.setZero();
@@ -375,31 +367,30 @@ BOOST_AUTO_TEST_CASE ( test_unfeasible_constraints )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN_EQUAL(status,expected);
-  BOOST_CHECK(status!=EIQUADPROG_FAST_OPTIMAL);
+  BOOST_WARN_EQUAL(status, expected);
+  BOOST_CHECK(status != EIQUADPROG_FAST_OPTIMAL);
 }
 
 // min -||x||^2
 // DOES NOT WORK!
 
-BOOST_AUTO_TEST_CASE ( test_unbounded )
-{
+BOOST_AUTO_TEST_CASE(test_unbounded) {
   EiquadprogFast qp;
-  qp.reset(2,0,0);
+  qp.reset(2, 0, 0);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = -1.0;
-  Q(1,1) = -1.0;
+  Q(0, 0) = -1.0;
+  Q(1, 1) = -1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(0,2);
+  Eigen::MatrixXd Aineq(0, 2);
 
   Eigen::VectorXd Bineq(0);
 
@@ -409,7 +400,7 @@ BOOST_AUTO_TEST_CASE ( test_unbounded )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_WARN_EQUAL(status,expected);
+  BOOST_WARN_EQUAL(status, expected);
 }
 
 // min -||x||^2
@@ -418,29 +409,28 @@ BOOST_AUTO_TEST_CASE ( test_unbounded )
 // 0<= x[1] <= 1
 // DOES NOT WORK!
 
-BOOST_AUTO_TEST_CASE ( test_nonconvex )
-{
+BOOST_AUTO_TEST_CASE(test_nonconvex) {
   EiquadprogFast qp;
-  qp.reset(2,0,4);
+  qp.reset(2, 0, 4);
 
-  Eigen::MatrixXd Q(2,2);
+  Eigen::MatrixXd Q(2, 2);
   Q.setZero();
-  Q(0,0) = -1.0;
-  Q(1,1) = -1.0;
+  Q(0, 0) = -1.0;
+  Q(1, 1) = -1.0;
 
   Eigen::VectorXd C(2);
   C.setZero();
 
-  Eigen::MatrixXd Aeq(0,2);
+  Eigen::MatrixXd Aeq(0, 2);
 
   Eigen::VectorXd Beq(0);
 
-  Eigen::MatrixXd Aineq(4,2);
+  Eigen::MatrixXd Aineq(4, 2);
   Aineq.setZero();
-  Aineq(0,0) =  1.;
-  Aineq(1,0) = -1.;
-  Aineq(2,1) =  1.;
-  Aineq(3,1) = -1.;
+  Aineq(0, 0) = 1.;
+  Aineq(1, 0) = -1.;
+  Aineq(2, 1) = 1.;
+  Aineq(3, 1) = -1.;
 
   Eigen::VectorXd Bineq(4);
   Bineq(0) = 0.;
@@ -460,12 +450,11 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
 
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
-  BOOST_CHECK_EQUAL(status,expected);
+  BOOST_CHECK_EQUAL(status, expected);
 
-  BOOST_WARN_CLOSE(qp.getObjValue(),val,1e-6);
+  BOOST_WARN_CLOSE(qp.getObjValue(), val, 1e-6);
 
   BOOST_WARN(x.isApprox(solution));
 }
 
-BOOST_AUTO_TEST_SUITE_END ()
-
+BOOST_AUTO_TEST_SUITE_END()
