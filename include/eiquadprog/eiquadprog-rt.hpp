@@ -1,22 +1,22 @@
 //
 // Copyright (c) 2017 CNRS
 //
-// This file is part of tsid
-// tsid is free software: you can redistribute it
+// This file is part of eiquadprog
+// eiquadprog is free software: you can redistribute it
 // and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version
 // 3 of the License, or (at your option) any later version.
-// tsid is distributed in the hope that it will be
+// eiquadprog is distributed in the hope that it will be
 // useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 // of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Lesser Public License for more details. You should have
 // received a copy of the GNU Lesser General Public License along with
-// tsid If not, see
+// eiquadprog If not, see
 // <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __invdyn_eiquadprog_rt_hpp__
-#define __invdyn_eiquadprog_rt_hpp__
+#ifndef __eiquadprog_rt_hpp__
+#define __eiquadprog_rt_hpp__
 
 #include <Eigen/Dense>
 
@@ -71,7 +71,7 @@ struct RtVectorX
   typedef Eigen::Matrix<int,    Rows, 1, Eigen::AutoAlign> i;
 };
 
-namespace tsid
+namespace eiquadprog
 {
 
   namespace solvers
@@ -291,6 +291,9 @@ namespace tsid
     };
 
   } /* namespace solvers */
-} /* namespace tsid */
+} /* namespace eiquadprog */
 
-#endif /* __invdyn_eiquadprog_rt_hpp__ */
+/* --- Details -------------------------------------------------------------------- */
+#include "eiquadprog/eiquadprog-rt.hxx"
+
+#endif /* __eiquadprog_rt_hpp__ */

@@ -1,27 +1,24 @@
 //
 // Copyright (c) 2017 CNRS
 //
-// This file is part of tsid
-// tsid is free software: you can redistribute it
+// This file is part of eiquadprog
+// eiquadprog is free software: you can redistribute it
 // and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version
 // 3 of the License, or (at your option) any later version.
-// tsid is distributed in the hope that it will be
+// eiquadprog is distributed in the hope that it will be
 // useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 // of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Lesser Public License for more details. You should have
 // received a copy of the GNU Lesser General Public License along with
-// tsid If not, see
+// eiquadprog If not, see
 // <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __invdyn_eiquadprog_rt_hxx__
-#define __invdyn_eiquadprog_rt_hxx__
+#ifndef __eiquadprog_rt_hxx__
+#define __eiquadprog_rt_hxx__
 
-#include "tsid/solvers/eiquadprog-rt.hpp"
-#include "tsid/utils/stop-watch.hpp"
-
-namespace tsid
+namespace eiquadprog
 {
 
   namespace solvers
@@ -644,5 +641,5 @@ l2a:/* Step 2a: determine step direction */
       goto l2a;
     }
   } /* namespace solvers */
-} /* namespace tsid */
-#endif /* __invdyn_eiquadprog_rt_hxx__ */
+} /* namespace eiquadprog */
+#endif /* __eiquadprog_rt_hxx__ */
