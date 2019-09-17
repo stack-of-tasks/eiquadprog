@@ -231,8 +231,8 @@ BOOST_AUTO_TEST_CASE ( test_full )
 
 // min ||x||^2
 //    s.t.
-// x[0] = -1
 // x[0] =  1
+// x[0] = -1
 // DOES NOT WORK!
 
 BOOST_AUTO_TEST_CASE ( test_unfeasible_equalities )
@@ -405,10 +405,10 @@ BOOST_AUTO_TEST_CASE ( test_nonconvex )
   Aineq(1,3) = -1.;
 
   Eigen::VectorXd Bineq(4);
-  Bineq(0) =  0.;
-  Bineq(1) = -1.;
-  Bineq(2) =  0.;
-  Bineq(3) = -1.;
+  Bineq(0) = 0.;
+  Bineq(1) = 1.;
+  Bineq(2) = 0.;
+  Bineq(3) = 1.;
 
   Eigen::VectorXd x(2);
   Eigen::VectorXi activeSet(4);
