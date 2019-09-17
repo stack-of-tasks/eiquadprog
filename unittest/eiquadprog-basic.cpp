@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE ( test_full )
   Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
-  Eigen::VectorXd solution(1);
+  Eigen::VectorXd solution(2);
   solution(0) = 2.;
   solution(1) = 3.;
 
