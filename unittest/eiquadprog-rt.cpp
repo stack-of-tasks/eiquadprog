@@ -57,6 +57,47 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
   BOOST_CHECK(x.isApprox(solution));
 }
 
+// min ||x-x_0||^2, x_0 = (1 1)^T
+
+BOOST_AUTO_TEST_CASE(test_biased) {
+  RtEiquadprog<2,0,0> qp;
+
+  RtMatrixX<2,2>::d Q;
+  Q.setZero();
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
+
+  RtVectorX<2>::d C;
+  C(0) = -1.;
+  C(1) = -1.;
+
+  RtMatrixX<0,2>::d Aeq;
+
+  RtVectorX<0>::d Beq;
+
+  RtMatrixX<0,2>::d Aineq;
+
+  RtVectorX<0>::d Bineq;
+
+  RtVectorX<2>::d x;
+
+  RtVectorX<2>::d solution;
+  solution(0) = 1.;
+  solution(1) = 1.;
+
+  double val = -1.;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_OPTIMAL;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_CHECK_EQUAL(status, expected);
+
+  BOOST_CHECK_CLOSE(qp.getObjValue(), val, 1e-6);
+
+  BOOST_CHECK(x.isApprox(solution));
+}
+
 // min ||x||^2
 //    s.t.
 // x[1] = 1 - x[0]
