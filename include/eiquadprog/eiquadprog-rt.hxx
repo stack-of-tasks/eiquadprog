@@ -315,7 +315,9 @@ namespace eiquadprog
       for (i = 0; i < nEqCon; i++)
       {
         START_PROFILER_EIQUADPROG_RT(PROFILE_EIQUADPROG_ADD_EQ_CONSTR_1);
-        np = CE.row(i);
+        //np = CE.row(i); // does not compile if nEqCon=0
+        for(int tmp=0;tmp<nVars;tmp++)
+          np[tmp]=CE(i,tmp);
         compute_d(d, m_J, np);
         update_z(z, m_J, d,  iq);
         update_r(R, r, d,  iq);
