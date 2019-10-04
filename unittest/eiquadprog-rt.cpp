@@ -352,5 +352,58 @@ BOOST_AUTO_TEST_CASE(test_unbounded) {
   BOOST_WARN(status != RT_EIQUADPROG_OPTIMAL); // SHOULD pass!
 }
 
+// min -||x||^2
+//    s.t.
+// 0<= x[0] <= 1
+// 0<= x[1] <= 1
+// DOES NOT WORK!
+
+BOOST_AUTO_TEST_CASE(test_nonconvex) {
+  RtEiquadprog<2,0,4> qp;
+
+  RtMatrixX<2,2>::d Q;
+  Q.setZero();
+  Q(0, 0) = -1.0;
+  Q(1, 1) = -1.0;
+
+  RtVectorX<2>::d C;
+  C.setZero();
+
+  RtMatrixX<0,2>::d Aeq;
+
+  RtVectorX<0>::d Beq;
+
+  RtMatrixX<4,2>::d Aineq(4, 2);
+  Aineq.setZero();
+  Aineq(0, 0) = 1.;
+  Aineq(1, 0) = -1.;
+  Aineq(2, 1) = 1.;
+  Aineq(3, 1) = -1.;
+
+  RtVectorX<4>::d Bineq;
+  Bineq(0) = 0.;
+  Bineq(1) = 1.;
+  Bineq(2) = 0.;
+  Bineq(3) = 1.;
+
+  RtVectorX<2>::d x;
+
+  RtVectorX<2>::d solution;
+  solution(0) = 1.;
+  solution(1) = 1.;
+
+  double val = -1.;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_OPTIMAL;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_CHECK_EQUAL(status, expected);
+
+  BOOST_WARN_CLOSE(qp.getObjValue(), val, 1e-6);
+
+  BOOST_WARN(x.isApprox(solution));
+}
+
 BOOST_AUTO_TEST_SUITE_END ()
 
