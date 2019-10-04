@@ -477,7 +477,9 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
       }
 
       /* set np = n(ip) */
-      np = CI.row(ip);
+      // np = CI.row(ip); // does not compile if nIneqCon=0
+      for(int tmp=0;tmp<nVars;tmp++)
+        np[tmp] = CI(ip,tmp);
       /* set u = (u 0)^T */
       u(iq) = 0.0;
       /* add ip to the active set A */
@@ -629,7 +631,10 @@ l2a:/* Step 2a: determine step direction */
       /* a partial step has been taken => drop constraint l */
       iai(l) = l;
       delete_constraint(R, m_J, A, u, iq, l);
-      s(ip) = CI.row(ip).dot(x) + ci0(ip);
+      // s(ip) = CI.row(ip).dot(x) + ci0(ip); // does not compile if nIneqCon=0
+      s(ip) = ci0(ip);
+      for(int tmp=0;tmp<nVars;tmp++)
+        s(ip) += CI(ip,tmp)*x[tmp];
 
 #ifdef TRACE_SOLVER
       std::cerr << "Partial step has taken " << t << std::endl;
