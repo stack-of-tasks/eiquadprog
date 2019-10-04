@@ -279,5 +279,78 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_equalities) {
   BOOST_CHECK_EQUAL(status, expected);
 }
 
+// min ||x||^2
+//    s.t.
+// x[0] >=  1
+// x[0] <= -1
+//
+// correctly fails, but returns wrong error code
+
+BOOST_AUTO_TEST_CASE(test_unfeasible_inequalities) {
+  RtEiquadprog<2,0,2> qp;
+
+  RtMatrixX<2,2>::d Q;
+  Q.setZero();
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
+
+  RtVectorX<2>::d C;
+  C.setZero();
+
+  RtMatrixX<0,2>::d Aeq;
+
+  RtVectorX<0>::d Beq;
+
+  RtMatrixX<2,2>::d Aineq;
+  Aineq.setZero();
+  Aineq(0, 0) = 1.;
+  Aineq(1, 0) = -1.;
+
+  RtVectorX<2>::d Bineq;
+  Bineq(0) = -1;
+  Bineq(1) = -1;
+
+  RtVectorX<2>::d x;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_INFEASIBLE;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_WARN_EQUAL(status, expected);
+  BOOST_CHECK(status != RT_EIQUADPROG_OPTIMAL);
+}
+
+// min -||x||^2
+// DOES NOT WORK!
+
+BOOST_AUTO_TEST_CASE(test_unbounded) {
+  RtEiquadprog<2,0,0> qp;
+
+  RtMatrixX<2,2>::d Q;
+  Q.setZero();
+  Q(0, 0) = -1.0;
+  Q(1, 1) = -1.0;
+
+  RtVectorX<2>::d C;
+  C.setZero();
+
+  RtMatrixX<0,2>::d Aeq;
+
+  RtVectorX<0>::d Beq;
+
+  RtMatrixX<0,2>::d Aineq;
+
+  RtVectorX<0>::d Bineq;
+
+  RtVectorX<2>::d x;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_UNBOUNDED;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_WARN_EQUAL(status, expected);
+  BOOST_WARN(status != RT_EIQUADPROG_OPTIMAL); // SHOULD pass!
+}
+
 BOOST_AUTO_TEST_SUITE_END ()
 
