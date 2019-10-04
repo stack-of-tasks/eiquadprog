@@ -241,5 +241,43 @@ BOOST_AUTO_TEST_CASE ( test_full )
   BOOST_CHECK(x.isApprox(solution));
 }
 
+// min ||x||^2
+//    s.t.
+// x[0] =  1
+// x[0] = -1
+
+BOOST_AUTO_TEST_CASE(test_unfeasible_equalities) {
+  RtEiquadprog<2,2,0> qp;
+
+  RtMatrixX<2,2>::d Q;
+  Q.setZero();
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
+
+  RtVectorX<2>::d C;
+  C.setZero();
+
+  RtMatrixX<2,2>::d Aeq;
+  Aeq.setZero();
+  Aeq(0, 0) = 1.;
+  Aeq(1, 0) = 1.;
+
+  RtVectorX<2>::d Beq;
+  Beq(0) = -1.;
+  Beq(1) = 1.;
+
+  RtMatrixX<0,2>::d Aineq;
+
+  RtVectorX<0>::d Bineq;
+
+  RtVectorX<2>::d x;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_REDUNDANT_EQUALITIES;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_CHECK_EQUAL(status, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END ()
 
