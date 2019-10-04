@@ -318,6 +318,51 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_inequalities) {
   BOOST_CHECK(status != RT_EIQUADPROG_OPTIMAL);
 }
 
+// min ||x-x_0||^2, x_0 = (1 1)^T
+//    s.t.
+// x[1] = 1 - x[0]
+// x[0] <= 0
+// x[1] <= 0
+//
+// correctly fails, but returns wrong error code
+
+BOOST_AUTO_TEST_CASE(test_unfeasible_constraints) {
+  RtEiquadprog<2, 1, 2> qp;
+
+  RtMatrixX<2, 2>::d Q;
+  Q.setZero();
+  Q(0, 0) = 1.0;
+  Q(1, 1) = 1.0;
+
+  RtVectorX<2>::d C;
+  C(0) = -1.;
+  C(1) = -1.;
+
+  RtMatrixX<1, 2>::d Aeq;
+  Aeq(0, 0) = 1.;
+  Aeq(0, 1) = 1.;
+
+  RtVectorX<1>::d Beq;
+  Beq(0) = -1.;
+
+  RtMatrixX<2, 2>::d Aineq;
+  Aineq.setZero();
+  Aineq(0, 0) = -1.;
+  Aineq(1, 1) = -1.;
+
+  RtVectorX<2>::d Bineq;
+  Bineq.setZero();
+
+  RtVectorX<2>::d x;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_INFEASIBLE;
+
+  RtEiquadprog_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_WARN_EQUAL(status, expected);
+  BOOST_CHECK(status != RT_EIQUADPROG_OPTIMAL);
+}
+
 // min -||x||^2
 // DOES NOT WORK!
 
