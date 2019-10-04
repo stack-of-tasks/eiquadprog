@@ -401,6 +401,7 @@ BOOST_AUTO_TEST_CASE(test_unbounded) {
   EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_WARN_EQUAL(status, expected);
+  BOOST_WARN(status != EIQUADPROG_FAST_OPTIMAL); // SHOULD pass!
 }
 
 // min -||x||^2
