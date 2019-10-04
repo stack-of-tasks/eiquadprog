@@ -17,7 +17,6 @@ using namespace eiquadprog::solvers;
 
 BOOST_AUTO_TEST_SUITE ( BOOST_TEST_MODULE )
 
-/*
 // min ||x||^2
 
 BOOST_AUTO_TEST_CASE ( test_unbiased )
@@ -57,7 +56,6 @@ BOOST_AUTO_TEST_CASE ( test_unbiased )
 
   BOOST_CHECK(x.isApprox(solution));
 }
-*/
 
 // min ||x||^2
 //    s.t.
