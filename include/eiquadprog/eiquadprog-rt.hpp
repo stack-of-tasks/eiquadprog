@@ -58,22 +58,12 @@
 template<int Rows, int Cols>
 struct RtMatrixX
 {
-//  typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::AutoAlign, Rows, Cols> d;
-//
-// FIXME: Eigen::AutoAlign does not work with single-row matrices
-//  typedef Eigen::Matrix<double, Rows, Cols, Eigen::AutoAlign> d;
   typedef Eigen::Matrix<double, Rows, Cols> d;
 };
 
 template<int Rows>
 struct RtVectorX
 {
-//  typedef Eigen::Matrix<double, Eigen::Dynamic, 1, Eigen::AutoAlign, Rows, 1> d;
-//  typedef Eigen::Matrix<int,    Eigen::Dynamic, 1, Eigen::AutoAlign, Rows, 1> i;
-
-// FIXME: Eigen::AutoAlign does not work with single-row matrices
-//  typedef Eigen::Matrix<double, Rows, 1, Eigen::AutoAlign> d;
-//  typedef Eigen::Matrix<int,    Rows, 1, Eigen::AutoAlign> i;
   typedef Eigen::Matrix<double, Rows, 1> d;
   typedef Eigen::Matrix<int,    Rows, 1> i;
 };
