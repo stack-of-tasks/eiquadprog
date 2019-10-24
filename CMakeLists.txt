@@ -17,12 +17,7 @@
 # along with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-
-INCLUDE(cmake/base.cmake)
-INCLUDE(cmake/boost.cmake)
-INCLUDE(cmake/eigen.cmake)
-INCLUDE(cmake/test.cmake)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
 SET(PROJECT_NAMESPACE stack-of-tasks)
 SET(PROJECT_NAME eiquadprog)
@@ -30,11 +25,17 @@ SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
 SET(PROJECT_URL "https://gepgitlab.laas.fr/${PROJECT_NAMESPACE}/${PROJECT_NAME}")
 SET(PROJECT_CUSTOM_HEADER_EXTENSION "hpp")
 
+INCLUDE(cmake/base.cmake)
+INCLUDE(cmake/boost.cmake)
+INCLUDE(cmake/eigen.cmake)
+INCLUDE(cmake/test.cmake)
+
 # Disable -Werror on Unix for now.
 SET(CXX_DISABLE_WERROR True)
 SET(CMAKE_VERBOSE_MAKEFILE True)
 
-SETUP_PROJECT()
+CMAKE_POLICY(SET CMP0048 NEW)
+PROJECT(${PROJECT_NAME} VERSION ${PROJECT_VERSION_FULL} LANGUAGES CXX)
 
 # ----------------------------------------------------
 # --- DEPENDENCIES -----------------------------------
@@ -50,5 +51,3 @@ PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
 
 ADD_SUBDIRECTORY(include/${PROJECT_NAME})
 ADD_SUBDIRECTORY(unittest)
-
-SETUP_PROJECT_FINALIZE()
