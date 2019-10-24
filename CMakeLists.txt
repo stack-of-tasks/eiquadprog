@@ -40,7 +40,7 @@ PROJECT(${PROJECT_NAME} VERSION ${PROJECT_VERSION_FULL} LANGUAGES CXX)
 # ----------------------------------------------------
 # --- DEPENDENCIES -----------------------------------
 # ----------------------------------------------------
-ADD_REQUIRED_DEPENDENCY("eigen3")
+ADD_REQUIRED_DEPENDENCY("eigen3 >= 3.2.92")
 
 SET(BOOST_COMPONENTS unit_test_framework)
 SEARCH_FOR_BOOST()
