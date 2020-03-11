@@ -18,14 +18,13 @@
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 #test paths and names (without .cpp extension)
-SET (TESTS
+SET(TESTS
   eiquadprog-basic
   eiquadprog-fast
   eiquadprog-rt
   )
 
 FOREACH(test ${TESTS})
-  ADD_UNIT_TEST(${test} ${test})
-  TARGET_LINK_LIBRARIES(${test} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-  PKG_CONFIG_USE_DEPENDENCY(${test} eigen3)
+  ADD_UNIT_TEST(${test} ${test}.cpp)
+  TARGET_LINK_LIBRARIES(${test} ${PROJECT_NAME} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 ENDFOREACH(test ${TESTS})
