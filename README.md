@@ -3,13 +3,20 @@
 [![Pipeline status](https://gepgitlab.laas.fr/stack-of-tasks/eiquadprog/badges/master/pipeline.svg)](https://gepgitlab.laas.fr/stack-of-tasks/eiquadprog/commits/master)
 [![Coverage report](https://gepgitlab.laas.fr/stack-of-tasks/eiquadprog/badges/master/coverage.svg?job=doc-coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/eiquadprog/master/coverage/)
 
-This repo contains a C++ implementation of the algorithm of Goldfarb and Idnani for the solution of a (convex) Quadratic Programming problem by means of a dual method.
+This repo contains different C++ implementations of the algorithm of Goldfarb and Idnani for the solution of a (convex) Quadratic Programming problem by means of a dual method.
 
 The problem is in the form:
  min 0.5 * x G x + g0 x
  s.t.
  CE^T x + ce0 = 0
  CI^T x + ci0 >= 0
+
+There are 3 implementations:
+- `eiquadprog.hpp`: the original C++ implementation
+- `eiquadprog-fast.hpp`: an improved version employing a wrapper, avoiding dynamic memory allocation
+- `eiquadprog-rt.hpp`: similar to the above, it employs fixed-size Eigen vectors. This requires the problem dimensions to be known at compile time and is recommended only for small problems.
+
+Please refer to the unit tests for examples of usage.
 
 ## Authors
 
