@@ -11,7 +11,7 @@ The problem is in the form:
  CE^T x + ce0 = 0
  CI^T x + ci0 >= 0
 
- ## Authors
+## Authors
 
 [Eiquadprog](https://github.com/stack-of-tasks/eiquadprog) was created at LAAS-CNRS by Gabriele Buondonno, based on
 parts from [TSID](https://github.com/stack-of-tasks/tsid) by Andrea Del Prete.
