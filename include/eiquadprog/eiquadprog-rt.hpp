@@ -71,6 +71,7 @@ namespace eiquadprog {
 
 namespace solvers {
 
+#include "eiquadprog/eiquadprog-utils.hxx"
 /**
  * Possible states of the solver.
  */
@@ -135,14 +136,14 @@ class RtEiquadprog {
    * s.t. CE x + ce0 = 0
    *      CI x + ci0 >= 0
    */
-  inline RtEiquadprog_status solve_quadprog(const typename RtMatrixX<nVars, nVars>::d& Hess,
-                                            const typename RtVectorX<nVars>::d& g0,
-                                            const typename RtMatrixX<nEqCon, nVars>::d& CE,
-                                            const typename RtVectorX<nEqCon>::d& ce0,
-                                            const typename RtMatrixX<nIneqCon, nVars>::d& CI,
-                                            const typename RtVectorX<nIneqCon>::d& ci0,
-                                            typename RtVectorX<nVars>::d& x);
-
+  RtEiquadprog_status solve_quadprog(const typename RtMatrixX<nVars, nVars>::d& Hess,
+                                     const typename RtVectorX<nVars>::d& g0,
+                                     const typename RtMatrixX<nEqCon, nVars>::d& CE,
+                                     const typename RtVectorX<nEqCon>::d& ce0,
+                                     const typename RtMatrixX<nIneqCon, nVars>::d& CI,
+                                     const typename RtVectorX<nIneqCon>::d& ci0,
+                                     typename RtVectorX<nVars>::d& x);
+  
   typename RtMatrixX<nVars, nVars>::d m_J;  // J * J' = Hessian
   bool is_inverse_provided_;
 
@@ -244,18 +245,19 @@ class RtEiquadprog {
     R.topLeftCorner(iq, iq).template triangularView<Eigen::Upper>().solveInPlace(r.head(iq));
   }
 
-  inline bool add_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
+  bool add_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
                              typename RtVectorX<nVars>::d& d, int& iq, double& R_norm);
 
-  inline void delete_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
-                                typename RtVectorX<nIneqCon + nEqCon>::i& A,
-                                typename RtVectorX<nIneqCon + nEqCon>::d& u, int& iq, int l);
+  void delete_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
+                         typename RtVectorX<nIneqCon + nEqCon>::i& A,
+                         typename RtVectorX<nIneqCon + nEqCon>::d& u, int& iq, int l);
 };
 
 } /* namespace solvers */
 } /* namespace eiquadprog */
 
-/* --- Details -------------------------------------------------------------------- */
 #include "eiquadprog/eiquadprog-rt.hxx"
+/* --- Details -------------------------------------------------------------------- */
+
 
 #endif /* __eiquadprog_rt_hpp__ */

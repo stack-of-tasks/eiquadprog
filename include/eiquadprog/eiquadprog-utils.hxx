@@ -1,6 +1,8 @@
 #ifndef EIQUADPROG_UTILS_HPP_
 #define EIQUADPROG_UTILS_HPP_
 
+#include <Eigen/Core>
+
 /// Compute sqrt(a^2 + b^2)
 template <typename Scalar>
 inline Scalar distance(Scalar a, Scalar b) {

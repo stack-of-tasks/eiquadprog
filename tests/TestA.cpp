@@ -2,8 +2,6 @@
 
 #include <Eigen/Core>
 
-#include <boost/test/unit_test.hpp>
-
 #include "TestA.hpp"
 
 using namespace eiquadprog::solvers;
@@ -16,7 +14,6 @@ A::A():
     Beq_(0),
     Aineq_(0,2),
     Bineq_(0),
-    solution_(2),
     QP_()
 {
   
@@ -28,8 +25,6 @@ A::A():
 
 
   C_.setZero();
-
-  solution_.setZero();
 
   expected_ = EIQUADPROG_FAST_OPTIMAL;
 
