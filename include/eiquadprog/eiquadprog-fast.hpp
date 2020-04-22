@@ -61,10 +61,12 @@ namespace eiquadprog {
 
 namespace solvers {
 
+#include "eiquadprog/eiquadprog-utils.hxx"
+
 /**
  * Possible states of the solver.
  */
-enum EiquadprogFast_status {
+enum  EiquadprogFast_status {
   EIQUADPROG_FAST_OPTIMAL = 0,
   EIQUADPROG_FAST_INFEASIBLE = 1,
   EIQUADPROG_FAST_UNBOUNDED = 2,
@@ -228,7 +230,5 @@ class EiquadprogFast {
 } /* namespace solvers */
 } /* namespace eiquadprog */
 
-/* --- Details -------------------------------------------------------------------- */
-#include "eiquadprog/eiquadprog-fast.hxx"
 
 #endif /* EIQUADPROGFAST_HPP_ */
