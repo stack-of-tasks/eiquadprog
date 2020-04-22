@@ -22,21 +22,7 @@
 namespace eiquadprog {
 namespace solvers {
 
-/// Compute sqrt(a^2 + b^2)
-template <typename Scalar>
-inline Scalar distance(Scalar a, Scalar b) {
-  Scalar a1, b1, t;
-  a1 = std::abs(a);
-  b1 = std::abs(b);
-  if (a1 > b1) {
-    t = (b1 / a1);
-    return a1 * std::sqrt(1.0 + t * t);
-  } else if (b1 > a1) {
-    t = (a1 / b1);
-    return b1 * std::sqrt(1.0 + t * t);
-  }
-  return a1 * std::sqrt(2.0);
-}
+#include "eiquadprog/eiquadprog-utils.hxx"
 
 EiquadprogFast::EiquadprogFast() {
   m_maxIter = DEFAULT_MAX_ITER;
@@ -216,14 +202,6 @@ void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, Ve
   }
 }
 
-template <class Derived>
-void print_vector(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << x.transpose() << std::endl;
-}
-template <class Derived>
-void print_matrix(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << std::endl << x << std::endl;
-}
 
 EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const VectorXd& g0, const MatrixXd& CE,
                                                      const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0,
@@ -633,5 +611,6 @@ l2a: /* Step 2a: determine step direction */
 
 } /* namespace solvers */
 } /* namespace eiquadprog */
+
 
 #endif /* EIQUADPROGFAST_HXX_ */

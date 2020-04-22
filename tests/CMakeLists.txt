@@ -22,9 +22,16 @@ SET(TESTS
   eiquadprog-basic
   eiquadprog-fast
   eiquadprog-rt
+  eiquadprog-both
   )
 
 FOREACH(test ${TESTS})
   ADD_UNIT_TEST(${test} ${test}.cpp)
   TARGET_LINK_LIBRARIES(${test} ${PROJECT_NAME} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 ENDFOREACH(test ${TESTS})
+
+ADD_LIBRARY(testab SHARED TestA.cpp TestB.cpp)
+TARGET_INCLUDE_DIRECTORIES(testab SYSTEM PRIVATE ${EIGEN3_INCLUDE_DIR})
+
+#ADD_UNIT_TEST(test-integration test-integration.cpp )
+#TARGET_LINK_LIBRARIES(test-integration ${PROJECT_NAME} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} testab)

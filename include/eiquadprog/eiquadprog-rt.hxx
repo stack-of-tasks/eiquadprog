@@ -19,6 +19,8 @@
 #ifndef __eiquadprog_rt_hxx__
 #define __eiquadprog_rt_hxx__
 
+#include "eiquadprog/eiquadprog-utils.hxx"
+
 namespace eiquadprog {
 
 namespace solvers {
@@ -180,15 +182,6 @@ void RtEiquadprog<nVars, nEqCon, nIneqCon>::delete_constraint(typename RtMatrixX
       J(k, j + 1) = xny * (J(k, j) + t1) - t2;
     }
   }
-}
-
-template <class Derived>
-void print_vector(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << x.transpose() << std::endl;
-}
-template <class Derived>
-void print_matrix(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << std::endl << x << std::endl;
 }
 
 template <int nVars, int nEqCon, int nIneqCon>
