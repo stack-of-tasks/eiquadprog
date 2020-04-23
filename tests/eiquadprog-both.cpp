@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2019 CNRS
+// Copyright (c) 2020 CNRS
 //
 // This file is part of eiquadprog.
 //
