@@ -50,6 +50,7 @@ SET(${PROJECT_NAME}_HEADERS
   include/${PROJECT_NAME}/eiquadprog-fast.hpp
   include/${PROJECT_NAME}/eiquadprog-rt.hpp
   include/${PROJECT_NAME}/eiquadprog-rt.hxx
+  include/${PROJECT_NAME}/eiquadprog-utils.hxx  
   )
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED

@@ -88,52 +88,35 @@
 namespace eiquadprog {
 namespace solvers {
 
-inline void compute_d(Eigen::VectorXd& d, const Eigen::MatrixXd& J,
-                      const Eigen::VectorXd& np)
-{ d = J.adjoint() * np; }
+inline void compute_d(Eigen::VectorXd& d, const Eigen::MatrixXd& J, const Eigen::VectorXd& np) {
+  d = J.adjoint() * np;
+}
 
-inline void update_z(Eigen::VectorXd& z, const Eigen::MatrixXd& J,
-                     const Eigen::VectorXd& d,
-                     size_t iq) {
+inline void update_z(Eigen::VectorXd& z, const Eigen::MatrixXd& J, const Eigen::VectorXd& d, size_t iq) {
   z = J.rightCols(z.size() - iq) * d.tail(d.size() - iq);
 }
 
-inline void update_r(const Eigen::MatrixXd& R, Eigen::VectorXd& r,
-                     const Eigen::VectorXd& d,
-                     size_t iq) {
-  r.head(iq) = R.topLeftCorner(iq, iq).triangularView<Eigen::Upper>().
-               solve(d.head(iq));
+inline void update_r(const Eigen::MatrixXd& R, Eigen::VectorXd& r, const Eigen::VectorXd& d, size_t iq) {
+  r.head(iq) = R.topLeftCorner(iq, iq).triangularView<Eigen::Upper>().solve(d.head(iq));
 }
 
-bool add_constraint(Eigen::MatrixXd& R, Eigen::MatrixXd& J,
-                    Eigen::VectorXd& d,
-                    size_t& iq, double& R_norm);
-void delete_constraint(Eigen::MatrixXd& R, Eigen::MatrixXd& J,
-                       Eigen::VectorXi& A,
-                       Eigen::VectorXd& u, size_t p, size_t& iq, size_t l);
+bool add_constraint(Eigen::MatrixXd& R, Eigen::MatrixXd& J, Eigen::VectorXd& d, size_t& iq, double& R_norm);
+void delete_constraint(Eigen::MatrixXd& R, Eigen::MatrixXd& J, Eigen::VectorXi& A, Eigen::VectorXd& u, size_t p,
+                       size_t& iq, size_t l);
 
 /* solve_quadprog2 is used when the Cholesky decomposition of the G
    matrix is precomputed */
-double solve_quadprog2(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
-                       double c1,
-                       Eigen::VectorXd& g0, const Eigen::MatrixXd& CE,
-                       const Eigen::VectorXd& ce0,
-                       const Eigen::MatrixXd& CI, const Eigen::VectorXd& ci0,
-                       Eigen::VectorXd& x,
-                       Eigen::VectorXi& A, size_t& q);
+double solve_quadprog2(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol, double c1, Eigen::VectorXd& g0,
+                       const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0, const Eigen::MatrixXd& CI,
+                       const Eigen::VectorXd& ci0, Eigen::VectorXd& x, Eigen::VectorXi& A, size_t& q);
 
 /* solve_quadprog is used for on-demand QP solving */
-double solve_quadprog(Eigen::MatrixXd& G,
-                             Eigen::VectorXd& g0,
-                             const Eigen::MatrixXd& CE,
-                             const  Eigen::VectorXd& ce0,
-                             const Eigen::MatrixXd& CI,
-                             const Eigen::VectorXd& ci0, Eigen::VectorXd& x,
-                             Eigen::VectorXi& activeSet, size_t& activeSetSize);
+double solve_quadprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0, const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0,
+                      const Eigen::MatrixXd& CI, const Eigen::VectorXd& ci0, Eigen::VectorXd& x,
+                      Eigen::VectorXi& activeSet, size_t& activeSetSize);
 // }
 
-}
-}
-
+}  // namespace solvers
+}  // namespace eiquadprog
 
 #endif

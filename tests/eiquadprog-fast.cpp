@@ -66,8 +66,7 @@ BOOST_AUTO_TEST_CASE(test_unbiased) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq,
-                                                   Aineq, Bineq, x);
+  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
