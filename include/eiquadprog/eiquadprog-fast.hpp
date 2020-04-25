@@ -66,7 +66,7 @@ namespace solvers {
 /**
  * Possible states of the solver.
  */
-enum  EiquadprogFast_status {
+enum EiquadprogFast_status {
   EIQUADPROG_FAST_OPTIMAL = 0,
   EIQUADPROG_FAST_INFEASIBLE = 1,
   EIQUADPROG_FAST_UNBOUNDED = 2,
@@ -229,6 +229,5 @@ class EiquadprogFast {
 
 } /* namespace solvers */
 } /* namespace eiquadprog */
-
 
 #endif /* EIQUADPROGFAST_HPP_ */

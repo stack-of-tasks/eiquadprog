@@ -141,9 +141,8 @@ class RtEiquadprog {
                                      const typename RtMatrixX<nEqCon, nVars>::d& CE,
                                      const typename RtVectorX<nEqCon>::d& ce0,
                                      const typename RtMatrixX<nIneqCon, nVars>::d& CI,
-                                     const typename RtVectorX<nIneqCon>::d& ci0,
-                                     typename RtVectorX<nVars>::d& x);
-  
+                                     const typename RtVectorX<nIneqCon>::d& ci0, typename RtVectorX<nVars>::d& x);
+
   typename RtMatrixX<nVars, nVars>::d m_J;  // J * J' = Hessian
   bool is_inverse_provided_;
 
@@ -246,11 +245,11 @@ class RtEiquadprog {
   }
 
   bool add_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
-                             typename RtVectorX<nVars>::d& d, int& iq, double& R_norm);
+                      typename RtVectorX<nVars>::d& d, int& iq, double& R_norm);
 
   void delete_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
-                         typename RtVectorX<nIneqCon + nEqCon>::i& A,
-                         typename RtVectorX<nIneqCon + nEqCon>::d& u, int& iq, int l);
+                         typename RtVectorX<nIneqCon + nEqCon>::i& A, typename RtVectorX<nIneqCon + nEqCon>::d& u,
+                         int& iq, int l);
 };
 
 } /* namespace solvers */
@@ -258,6 +257,5 @@ class RtEiquadprog {
 
 #include "eiquadprog/eiquadprog-rt.hxx"
 /* --- Details -------------------------------------------------------------------- */
-
 
 #endif /* __eiquadprog_rt_hpp__ */

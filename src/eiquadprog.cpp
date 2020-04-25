@@ -1,7 +1,7 @@
 #include <eiquadprog/eiquadprog.hpp>
-namespace eiquadprog{
-namespace solvers{
-  
+namespace eiquadprog {
+namespace solvers {
+
 using namespace Eigen;
 
 /* solve_quadprog is used for on-demand QP solving */
@@ -22,9 +22,8 @@ double solve_quadprog(MatrixXd& G, VectorXd& g0, const MatrixXd& CE, const Vecto
  * @param A Output vector containing the indexes of the active constraints.
  * @param q Output value representing the size of the active set.
  */
-double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, const MatrixXd& CE,
-                       const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0, VectorXd& x, VectorXi& A,
-                       size_t& q) {
+double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, const MatrixXd& CE, const VectorXd& ce0,
+                       const MatrixXd& CI, const VectorXd& ci0, VectorXd& x, VectorXi& A, size_t& q) {
   size_t i, k, l; /* indices */
   size_t ip, me, mi;
   size_t n = g0.size();
@@ -438,6 +437,6 @@ void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_
     }
   }
 }
-        
-}
-}
+
+}  // namespace solvers
+}  // namespace eiquadprog

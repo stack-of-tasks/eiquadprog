@@ -1,12 +1,15 @@
+#include <iostream>
+
 #include "eiquadprog/eiquadprog-fast.hpp"
+#define TRACE_SOLVER
 
 namespace eiquadprog {
 namespace solvers {
 
-
 EiquadprogFast::EiquadprogFast() {
   m_maxIter = DEFAULT_MAX_ITER;
-  q = 0;  // size of the active set A (containing the indices of the active constraints)
+  q = 0;  // size of the active set A (containing the indices
+  // of the active constraints)
   is_inverse_provided_ = false;
   m_nVars = 0;
   m_nEqCon = 0;
@@ -182,7 +185,6 @@ void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, Ve
   }
 }
 
-
 EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const VectorXd& g0, const MatrixXd& CE,
                                                      const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0,
                                                      VectorXd& x) {
@@ -232,7 +234,8 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
   R.setZero(nVars, nVars);
   R_norm = 1.0;
 
-  /* compute the inverse of the factorized matrix Hess^-1, this is the initial value for H */
+  /* compute the inverse of the factorized matrix Hess^-1,
+     this is the initial value for H */
   // m_J = L^-T
   if (!is_inverse_provided_) {
     START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_CHOLESKY_INVERSE);
@@ -253,7 +256,8 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
   /* c1 * c2 is an estimate for cond(Hess) */
 
   /*
-   * Find the unconstrained minimizer of the quadratic form 0.5 * x Hess x + g0 x
+   * Find the unconstrained minimizer of the quadratic
+   * form 0.5 * x Hess x + g0 x
    * this is a feasible point in the dual space
    * x = Hess^-1 * g0
    */
@@ -296,10 +300,12 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
     print_vector("d", d, nVars);
 #endif
 
-    /* compute full step length t2: i.e., the minimum step in primal space s.t. the contraint
-    becomes feasible */
+    /* compute full step length t2: i.e.,
+       the minimum step in primal space s.t. the contraint
+       becomes feasible */
     t2 = 0.0;
-    if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
+    if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())
+      // i.e. z != 0
       t2 = (-np.dot(x) - ce0(i)) / z.dot(np);
 
     x += t2 * z;
@@ -326,7 +332,8 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
   for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
 
 #ifdef USE_WARM_START
-  //      DEBUG_STREAM("Gonna warm start using previous active set:\n"<<A.transpose()<<"\n")
+  //      DEBUG_STREAM("Gonna warm start using previous active
+  // set:\n"<<A.transpose()<<"\n")
   for (i = nEqCon; i < q; i++) {
     iai(i - nEqCon) = -1;
     ip = A(i);
@@ -335,8 +342,9 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
     update_z(z, m_J, d, iq);
     update_r(R, r, d, iq);
 
-    /* compute full step length t2: i.e., the minimum step in primal space s.t. the contraint
-    becomes feasible */
+    /* compute full step length t2: i.e.,
+       the minimum step in primal space s.t. the contraint
+       becomes feasible */
     t2 = 0.0;
     if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
       t2 = (-np.dot(x) - ci0(ip)) / z.dot(np);
@@ -408,7 +416,8 @@ l1:
   if (std::abs(psi) <= static_cast<double>(nIneqCon) * std::numeric_limits<double>::epsilon() * c1 * c2 * 100.0) {
     /* numerically there are not infeasibilities anymore */
     q = iq;
-    //        DEBUG_STREAM("Optimal active set:\n"<<A.head(iq).transpose()<<"\n\n")
+    //        DEBUG_STREAM("Optimal active
+    // set:\n"<<A.head(iq).transpose()<<"\n\n")
     return EIQUADPROG_FAST_OPTIMAL;
   }
 
@@ -419,7 +428,8 @@ l1:
 
 l2: /* Step 2: check for feasibility and determine a new S-pair */
   START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2);
-  // find constraint with highest violation (what about normalizing constraints?)
+  // find constraint with highest violation
+  // (what about normalizing constraints?)
   for (i = 0; i < nIneqCon; i++) {
     if (s(i) < ss && iai(i) != -1 && iaexcl(i)) {
       ss = s(i);
@@ -449,7 +459,8 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
 
 l2a: /* Step 2a: determine step direction */
   START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2A);
-  /* compute z = H np: the step direction in the primal space (through m_J, see the paper) */
+  /* compute z = H np: the step direction in the primal space
+     (through m_J, see the paper) */
   compute_d(d, m_J, np);
   //    update_z(z, m_J, d, iq);
   if (iq >= nVars) {
@@ -458,7 +469,8 @@ l2a: /* Step 2a: determine step direction */
   } else {
     update_z(z, m_J, d, iq);
   }
-  /* compute N* np (if q > 0): the negative of the step direction in the dual space */
+  /* compute N* np (if q > 0): the negative of the
+     step direction in the dual space */
   update_r(R, r, d, iq);
 #ifdef TRACE_SOLVER
   std::cerr << "Step direction z" << std::endl;
@@ -473,7 +485,8 @@ l2a: /* Step 2a: determine step direction */
   /* Step 2b: compute step length */
   START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2B);
   l = 0;
-  /* Compute t1: partial step length (maximum step in dual space without violating dual feasibility */
+  /* Compute t1: partial step length (maximum step in dual
+     space without violating dual feasibility */
   t1 = inf; /* +inf */
   /* find the index l s.t. it reaches the minimum of u+(x) / r */
   // l: index of constraint to drop (maybe)
@@ -484,8 +497,10 @@ l2a: /* Step 2a: determine step direction */
       l = A(k);
     }
   }
-  /* Compute t2: full step length (minimum step in primal space such that the constraint ip becomes feasible */
-  if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
+  /* Compute t2: full step length (minimum step in primal
+     space such that the constraint ip becomes feasible */
+  if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())
+    // i.e. z != 0
     t2 = -s(ip) / z.dot(np);
   else
     t2 = inf; /* +inf */
@@ -591,5 +606,3 @@ l2a: /* Step 2a: determine step direction */
 
 } /* namespace solvers */
 } /* namespace eiquadprog */
-
-

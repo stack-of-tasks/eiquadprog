@@ -26,8 +26,7 @@ namespace eiquadprog {
 namespace solvers {
 
 template <int nVars, int nEqCon, int nIneqCon>
-RtEiquadprog<nVars, nEqCon, nIneqCon>::RtEiquadprog() :
-    solver_return_(std::numeric_limits<double>::infinity()) {
+RtEiquadprog<nVars, nEqCon, nIneqCon>::RtEiquadprog() : solver_return_(std::numeric_limits<double>::infinity()) {
   m_maxIter = DEFAULT_MAX_ITER;
   q = 0;  // size of the active set A
   // (containing the indices of the active constraints)
@@ -38,10 +37,9 @@ template <int nVars, int nEqCon, int nIneqCon>
 RtEiquadprog<nVars, nEqCon, nIneqCon>::~RtEiquadprog() {}
 
 template <int nVars, int nEqCon, int nIneqCon>
-bool RtEiquadprog<nVars, nEqCon, nIneqCon>::
-add_constraint(typename RtMatrixX<nVars, nVars>::d& R,
-               typename RtMatrixX<nVars, nVars>::d& J,
-               typename RtVectorX<nVars>::d& d, int& iq, double& R_norm) {
+bool RtEiquadprog<nVars, nEqCon, nIneqCon>::add_constraint(typename RtMatrixX<nVars, nVars>::d& R,
+                                                           typename RtMatrixX<nVars, nVars>::d& J,
+                                                           typename RtVectorX<nVars>::d& d, int& iq, double& R_norm) {
   //      int n=J.rows();
 #ifdef TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';

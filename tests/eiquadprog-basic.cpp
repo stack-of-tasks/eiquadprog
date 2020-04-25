@@ -428,8 +428,7 @@ BOOST_AUTO_TEST_CASE(test_nonconvex) {
 
   double val = -1.;
 
-  double out = eiquadprog::solvers::solve_quadprog
-               (Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
 
   // DOES NOT WORK!?
   BOOST_WARN_CLOSE(out, val, 1e-6);
