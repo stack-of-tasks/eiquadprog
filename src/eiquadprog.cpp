@@ -193,7 +193,7 @@ l2a: /* Step 2a: determine step direction */
   print_vector("r", r, iq + 1);
   print_vector("u", u, iq + 1);
   print_vector("d", d, n);
-  print_ivector("A", A, iq + 1);
+  print_vector("A", A, iq + 1);
 #endif
 
   /* Step 2b: compute step length */
@@ -240,7 +240,7 @@ l2a: /* Step 2a: determine step direction */
     std::cerr << " in dual space: " << f_value << std::endl;
     print_vector("x", x, n);
     print_vector("z", z, n);
-    print_ivector("A", A, iq + 1);
+    print_vector("A", A, iq + 1);
 #endif
     goto l2a;
   }
@@ -258,7 +258,7 @@ l2a: /* Step 2a: determine step direction */
   print_vector("x", x, n);
   print_vector("u", u, iq + 1);
   print_vector("r", r, iq + 1);
-  print_ivector("A", A, iq + 1);
+  print_vector("A", A, iq + 1);
 #endif
 
   if (t == t2) {
@@ -273,7 +273,7 @@ l2a: /* Step 2a: determine step direction */
       delete_constraint(R, J, A, u, p, iq, ip);
 #ifdef TRACE_SOLVER
       print_matrix("R", R, n);
-      print_ivector("A", A, iq);
+      print_vector("A", A, iq);
 #endif
       for (i = 0; i < m; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
@@ -287,7 +287,7 @@ l2a: /* Step 2a: determine step direction */
       iai(ip) = -1;
 #ifdef TRACE_SOLVER
     print_matrix("R", R, n);
-    print_ivector("A", A, iq);
+    print_vector("A", A, iq);
 #endif
     goto l1;
   }
@@ -302,7 +302,7 @@ l2a: /* Step 2a: determine step direction */
   delete_constraint(R, J, A, u, p, iq, l);
 #ifdef TRACE_SOLVER
   print_matrix("R", R, n);
-  print_ivector("A", A, iq);
+  print_vector("A", A, iq);
 #endif
 
   s(ip) = CI.col(ip).dot(x) + ci0(ip);

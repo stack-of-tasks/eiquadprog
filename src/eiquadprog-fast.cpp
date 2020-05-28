@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "eiquadprog/eiquadprog-fast.hpp"
-#define TRACE_SOLVER
 
 namespace eiquadprog {
 namespace solvers {

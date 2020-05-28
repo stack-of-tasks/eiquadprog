@@ -25,6 +25,9 @@ SET(PROJECT_NAME eiquadprog)
 SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
 SET(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
+# Project options
+OPTION(TRACE_SOLVER "trace solver on stderr" OFF)
+
 # Project configuration
 SET(PROJECT_USE_CMAKE_EXPORT TRUE)
 SET(CXX_DISABLE_WERROR TRUE)
@@ -50,13 +53,17 @@ SET(${PROJECT_NAME}_HEADERS
   include/${PROJECT_NAME}/eiquadprog-fast.hpp
   include/${PROJECT_NAME}/eiquadprog-rt.hpp
   include/${PROJECT_NAME}/eiquadprog-rt.hxx
-  include/${PROJECT_NAME}/eiquadprog-utils.hxx  
+  include/${PROJECT_NAME}/eiquadprog-utils.hxx
   )
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
   src/eiquadprog-fast.cpp
   src/eiquadprog.cpp
   )
+
+IF(TRACE_SOLVER)
+  TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PRIVATE TRACE_SOLVER)
+ENDIF(TRACE_SOLVER)
 
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} SYSTEM PRIVATE ${EIGEN3_INCLUDE_DIR})
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} SYSTEM INTERFACE ${EIGEN3_INCLUDE_DIR})
