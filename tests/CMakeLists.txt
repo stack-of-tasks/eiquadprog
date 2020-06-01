@@ -15,6 +15,7 @@
 # along with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIRS})
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 #test paths and names (without .cpp extension)
