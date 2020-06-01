@@ -26,6 +26,7 @@ SET(TESTS
   eiquadprog-both
   )
 
+ADD_DEFINITIONS(-Wno-c99-extensions)
 FOREACH(test ${TESTS})
   ADD_UNIT_TEST(${test} ${test}.cpp)
   TARGET_LINK_LIBRARIES(${test} ${PROJECT_NAME}
