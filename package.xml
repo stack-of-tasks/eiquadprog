@@ -1,6 +1,6 @@
 <package format="2">
   <name>eiquadprog</name>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <description>
     Eiquadprog a QP solver using active sets
   </description>
