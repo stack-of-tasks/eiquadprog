@@ -1,4 +1,5 @@
-<package format="2">
+<?xml version="1.0"?>
+<package format="3">
   <name>eiquadprog</name>
   <version>1.2.1</version>
   <description>
@@ -15,12 +16,20 @@
   <author>Benjamin Stephens</author>
   <author>Gael Guennebaud</author>
 
-  <build_depend>roscpp</build_depend>
-
-  <exec_depend>roscpp</exec_depend>
-
-  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>git</build_depend>
+  <build_depend>doxygen</build_depend>
+  <!-- The following tags are recommended by REP-136 -->
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>
+  <depend>boost</depend>
+  <depend>eigen</depend>
 
   <doc_depend>doxygen</doc_depend>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
 
 </package>
