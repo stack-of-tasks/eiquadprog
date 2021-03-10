@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>eiquadprog</name>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <description>
     Eiquadprog a QP solver using active sets
   </description>
-  <maintainer email="ostasse@laas.fr">Olivier Stasse</maintainer>
+  <maintainer email="guilhem.saurel@laas.fr">Guilhem Saurel</maintainer>
   <license>LGPLv3</license>
 
   <url>git@github.com:stack-of-tasks/eiquadprog.git</url>
