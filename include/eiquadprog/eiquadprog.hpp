@@ -142,7 +142,7 @@ double solve_quadprog(Eigen::MatrixXd &G, Eigen::VectorXd &g0,
                       Eigen::VectorXi &activeSet, size_t &activeSetSize);
 // }
 
-} // namespace solvers
-} // namespace eiquadprog
+}  // namespace solvers
+}  // namespace eiquadprog
 
 #endif

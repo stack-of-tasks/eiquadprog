@@ -10,7 +10,6 @@ double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
                       const VectorXd &ce0, const MatrixXd &CI,
                       const VectorXd &ci0, VectorXd &x, VectorXi &activeSet,
                       size_t &activeSetSize) {
-
   Eigen::DenseIndex p = CE.cols();
   Eigen::DenseIndex m = CI.cols();
 
@@ -40,7 +39,6 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
                       const MatrixXd &CE, const VectorXd &ce0,
                       const MatrixXd &CI, const VectorXd &ci0, VectorXd &x,
                       VectorXi &activeSet, size_t &activeSetSize) {
-
   Eigen::DenseIndex p = CE.cols();
   Eigen::DenseIndex m = CI.cols();
 
@@ -74,8 +72,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
                      * step length t1 and the full step length t2 */
   //        VectorXi A(m + p); // Del Prete: active set is now an output
   //        parameter
-  if (static_cast<size_t>(A.size()) != m + p)
-    A.resize(m + p);
+  if (static_cast<size_t>(A.size()) != m + p) A.resize(m + p);
   VectorXi A_old(m + p), iai(m + p), iaexcl(m + p);
   //        int q;
   size_t iq, iter = 0;
@@ -138,7 +135,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
        the contraint becomes feasible */
     t2 = 0.0;
     if (std::abs(z.dot(z)) >
-        std::numeric_limits<double>::epsilon()) // i.e. z != 0
+        std::numeric_limits<double>::epsilon())  // i.e. z != 0
       t2 = (-np.dot(x) - ce0(i)) / z.dot(np);
 
     x += t2 * z;
@@ -159,8 +156,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
   }
 
   /* set iai = K \ A */
-  for (i = 0; i < mi; i++)
-    iai(i) = static_cast<VectorXi::Scalar>(i);
+  for (i = 0; i < mi; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
 
 l1:
   iter++;
@@ -257,7 +253,7 @@ l2a: /* Step 2a: determine step direction */
   /* Compute t2: full step length (minimum step in primal space such that the
    * constraint ip becomes feasible */
   if (std::abs(z.dot(z)) >
-      std::numeric_limits<double>::epsilon()) // i.e. z != 0
+      std::numeric_limits<double>::epsilon())  // i.e. z != 0
     t2 = -s(ip) / z.dot(np);
   else
     t2 = inf; /* +inf */
@@ -324,8 +320,7 @@ l2a: /* Step 2a: determine step direction */
       utils::print_matrix("R", R, n);
       utils::print_vector("A", A, iq);
 #endif
-      for (i = 0; i < m; i++)
-        iai(i) = static_cast<VectorXi::Scalar>(i);
+      for (i = 0; i < m; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
         iai(A(i)) = -1;
@@ -388,8 +383,7 @@ bool add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d, size_t &iq,
     cc = d(j - 1);
     ss = d(j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     d(j) = 0.0;
     ss = ss / h;
     cc = cc / h;
@@ -451,23 +445,20 @@ void delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A, VectorXd &u,
   u(iq - 1) = u(iq);
   A(iq) = 0;
   u(iq) = 0.0;
-  for (j = 0; j < iq; j++)
-    R(j, iq - 1) = 0.0;
+  for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << '/' << iq << std::endl;
 #endif
 
-  if (iq == 0)
-    return;
+  if (iq == 0) return;
 
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     cc = cc / h;
     ss = ss / h;
     R(j + 1, j) = 0.0;
@@ -494,5 +485,5 @@ void delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A, VectorXd &u,
   }
 }
 
-} // namespace solvers
-} // namespace eiquadprog
+}  // namespace solvers
+}  // namespace eiquadprog

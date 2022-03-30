@@ -8,7 +8,8 @@ namespace eiquadprog {
 namespace utils {
 
 /// Compute sqrt(a^2 + b^2)
-template <typename Scalar> inline Scalar distance(Scalar a, Scalar b) {
+template <typename Scalar>
+inline Scalar distance(Scalar a, Scalar b) {
   Scalar a1, b1, t;
   a1 = std::abs(a);
   b1 = std::abs(b);
@@ -31,6 +32,7 @@ void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
   std::cerr << name << std::endl << x << std::endl;
 }
 
-}} // namespace eiquadprog::utils
+}  // namespace utils
+}  // namespace eiquadprog
 
 #endif

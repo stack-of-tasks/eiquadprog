@@ -7,7 +7,7 @@ namespace solvers {
 
 EiquadprogFast::EiquadprogFast() {
   m_maxIter = DEFAULT_MAX_ITER;
-  q = 0; // size of the active set A (containing the indices
+  q = 0;  // size of the active set A (containing the indices
   // of the active constraints)
   is_inverse_provided_ = false;
   m_nVars = 0;
@@ -70,8 +70,7 @@ bool EiquadprogFast::add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d,
     cc = d(j - 1);
     ss = d(j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     d(j) = 0.0;
     ss = ss / h;
     cc = cc / h;
@@ -84,8 +83,8 @@ bool EiquadprogFast::add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d,
     xny = ss / (1.0 + cc);
 
 // #define OPTIMIZE_ADD_CONSTRAINT
-#ifdef OPTIMIZE_ADD_CONSTRAINT // the optimized code is actually slower than the
-                               // original
+#ifdef OPTIMIZE_ADD_CONSTRAINT  // the optimized code is actually slower than
+                                // the original
     T1 = J.col(j - 1);
     cc_ss(0) = cc;
     cc_ss(1) = ss;
@@ -147,23 +146,20 @@ void EiquadprogFast::delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A,
   u(iq - 1) = u(iq);
   A(iq) = 0;
   u(iq) = 0.0;
-  for (j = 0; j < iq; j++)
-    R(j, iq - 1) = 0.0;
+  for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << '/' << iq << std::endl;
 #endif
 
-  if (iq == 0)
-    return;
+  if (iq == 0) return;
 
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     cc = cc / h;
     ss = ss / h;
     R(j + 1, j) = 0.0;
@@ -210,20 +206,20 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
          static_cast<size_t>(CI.cols()) == m_nVars);
   assert(static_cast<size_t>(ci0.size()) == m_nIneqCon);
 
-  size_t i, k, l; // indices
-  size_t ip;      // index of the chosen violated constraint
-  size_t iq;      // current number of active constraints
-  double psi;     // current sum of constraint violations
-  double c1;      // Hessian trace
-  double c2;      // Hessian Cholesky factor trace
-  double ss;      // largest constraint violation (negative for violation)
-  double R_norm;  // norm of matrix R
+  size_t i, k, l;  // indices
+  size_t ip;       // index of the chosen violated constraint
+  size_t iq;       // current number of active constraints
+  double psi;      // current sum of constraint violations
+  double c1;       // Hessian trace
+  double c2;       // Hessian Cholesky factor trace
+  double ss;       // largest constraint violation (negative for violation)
+  double R_norm;   // norm of matrix R
   const double inf = std::numeric_limits<double>::infinity();
   double t, t1, t2;
   /* t is the step length, which is the minimum of the partial step length t1
    * and the full step length t2 */
 
-  iter = 0; // active-set iteration number
+  iter = 0;  // active-set iteration number
 
   /*
    * Preprocessing phase
@@ -338,8 +334,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_ADD_EQ_CONSTR);
 
   /* set iai = K \ A */
-  for (i = 0; i < nIneqCon; i++)
-    iai(i) = static_cast<VectorXi::Scalar>(i);
+  for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
 
 #ifdef USE_WARM_START
   //      DEBUG_STREAM("Gonna warm start using previous active
@@ -357,7 +352,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
        becomes feasible */
     t2 = 0.0;
     if (std::abs(z.dot(z)) >
-        std::numeric_limits<double>::epsilon()) // i.e. z != 0
+        std::numeric_limits<double>::epsilon())  // i.e. z != 0
       t2 = (-np.dot(x) - ci0(ip)) / z.dot(np);
     else
       DEBUG_STREAM("[WARM START] z=0\n")
@@ -582,8 +577,7 @@ l2a: /* Step 2a: determine step direction */
       utils::print_matrix("R", R, nVars);
       utils::print_vector("A", A, iq);
 #endif
-      for (i = 0; i < nIneqCon; i++)
-        iai(i) = static_cast<VectorXi::Scalar>(i);
+      for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
         iai(A(i)) = -1;

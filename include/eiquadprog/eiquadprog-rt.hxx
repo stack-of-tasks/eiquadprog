@@ -29,7 +29,7 @@ template <int nVars, int nEqCon, int nIneqCon>
 RtEiquadprog<nVars, nEqCon, nIneqCon>::RtEiquadprog()
     : solver_return_(std::numeric_limits<double>::infinity()) {
   m_maxIter = DEFAULT_MAX_ITER;
-  q = 0; // size of the active set A
+  q = 0;  // size of the active set A
   // (containing the indices of the active constraints)
   is_inverse_provided_ = false;
 }
@@ -68,8 +68,7 @@ bool RtEiquadprog<nVars, nEqCon, nIneqCon>::add_constraint(
     cc = d(j - 1);
     ss = d(j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     d(j) = 0.0;
     ss = ss / h;
     cc = cc / h;
@@ -82,8 +81,8 @@ bool RtEiquadprog<nVars, nEqCon, nIneqCon>::add_constraint(
     xny = ss / (1.0 + cc);
 
 // #define OPTIMIZE_ADD_CONSTRAINT
-#ifdef OPTIMIZE_ADD_CONSTRAINT // the optimized code is actually slower than the
-                               // original
+#ifdef OPTIMIZE_ADD_CONSTRAINT  // the optimized code is actually slower than
+                                // the original
     T1 = J.col(j - 1);
     cc_ss(0) = cc;
     cc_ss(1) = ss;
@@ -148,23 +147,20 @@ void RtEiquadprog<nVars, nEqCon, nIneqCon>::delete_constraint(
   u(iq - 1) = u(iq);
   A(iq) = 0;
   u(iq) = 0.0;
-  for (j = 0; j < iq; j++)
-    R(j, iq - 1) = 0.0;
+  for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << '/' << iq << std::endl;
 #endif
 
-  if (iq == 0)
-    return;
+  if (iq == 0) return;
 
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
     h = utils::distance(cc, ss);
-    if (h == 0.0)
-      continue;
+    if (h == 0.0) continue;
     cc = cc / h;
     ss = ss / h;
     R(j + 1, j) = 0.0;
@@ -200,20 +196,20 @@ RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
     const typename RtMatrixX<nIneqCon, nVars>::d &CI,
     const typename RtVectorX<nIneqCon>::d &ci0,
     typename RtVectorX<nVars>::d &x) {
-  int i, k, l;   // indices
-  int ip;        // index of the chosen violated constraint
-  int iq;        // current number of active constraints
-  double psi;    // current sum of constraint violations
-  double c1;     // Hessian trace
-  double c2;     // Hessian Chowlesky factor trace
-  double ss;     // largest constraint violation (negative for violation)
-  double R_norm; // norm of matrix R
+  int i, k, l;    // indices
+  int ip;         // index of the chosen violated constraint
+  int iq;         // current number of active constraints
+  double psi;     // current sum of constraint violations
+  double c1;      // Hessian trace
+  double c2;      // Hessian Chowlesky factor trace
+  double ss;      // largest constraint violation (negative for violation)
+  double R_norm;  // norm of matrix R
   const double inf = std::numeric_limits<double>::infinity();
   double t, t1, t2;
   /* t is the step length, which is the minimum of the partial step length t1
    * and the full step length t2 */
 
-  iter = 0; // active-set iteration number
+  iter = 0;  // active-set iteration number
 
   /*
    * Preprocessing phase
@@ -286,8 +282,7 @@ RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
   for (i = 0; i < nEqCon; i++) {
     START_PROFILER_EIQUADPROG_RT(PROFILE_EIQUADPROG_ADD_EQ_CONSTR_1);
     // np = CE.row(i); // does not compile if nEqCon=0
-    for (int tmp = 0; tmp < nVars; tmp++)
-      np[tmp] = CE(i, tmp);
+    for (int tmp = 0; tmp < nVars; tmp++) np[tmp] = CE(i, tmp);
     compute_d(d, m_J, np);
     update_z(z, m_J, d, iq);
     update_r(R, r, d, iq);
@@ -303,7 +298,7 @@ RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
     the contraint becomes feasible */
     t2 = 0.0;
     if (std::abs(z.dot(z)) >
-        std::numeric_limits<double>::epsilon()) // i.e. z != 0
+        std::numeric_limits<double>::epsilon())  // i.e. z != 0
       t2 = (-np.dot(x) - ce0(i)) / z.dot(np);
 
     x += t2 * z;
@@ -327,8 +322,7 @@ RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
   STOP_PROFILER_EIQUADPROG_RT(PROFILE_EIQUADPROG_ADD_EQ_CONSTR);
 
   /* set iai = K \ A */
-  for (i = 0; i < nIneqCon; i++)
-    iai(i) = i;
+  for (i = 0; i < nIneqCon; i++) iai(i) = i;
 
 #ifdef USE_WARM_START
   //      DEBUG_STREAM("Gonna warm start using previous active
@@ -345,7 +339,7 @@ RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
     the contraint becomes feasible */
     t2 = 0.0;
     if (std::abs(z.dot(z)) >
-        std::numeric_limits<double>::epsilon()) // i.e. z != 0
+        std::numeric_limits<double>::epsilon())  // i.e. z != 0
       t2 = (-np.dot(x) - ci0(ip)) / z.dot(np);
     else
       DEBUG_STREAM("[WARM START] z=0\n")
@@ -443,8 +437,7 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
 
   /* set np = n(ip) */
   // np = CI.row(ip); // does not compile if nIneqCon=0
-  for (int tmp = 0; tmp < nVars; tmp++)
-    np[tmp] = CI(ip, tmp);
+  for (int tmp = 0; tmp < nVars; tmp++) np[tmp] = CI(ip, tmp);
   /* set u = (u 0)^T */
   u(iq) = 0.0;
   /* add ip to the active set A */
@@ -501,7 +494,7 @@ l2a: /* Step 2a: determine step direction */
   /* Compute t2: full step length (minimum step in primal space such that the
    * constraint ip becomes feasible */
   if (std::abs(z.dot(z)) >
-      std::numeric_limits<double>::epsilon()) // i.e. z != 0
+      std::numeric_limits<double>::epsilon())  // i.e. z != 0
     t2 = -s(ip) / z.dot(np);
   else
     t2 = inf; /* +inf */
@@ -570,8 +563,7 @@ l2a: /* Step 2a: determine step direction */
       utils::print_matrix("R", R, nVars);
       utils::print_vector("A", A, iq);
 #endif
-      for (i = 0; i < nIneqCon; i++)
-        iai(i) = i;
+      for (i = 0; i < nIneqCon; i++) iai(i) = i;
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
         iai(A(i)) = -1;
@@ -595,8 +587,7 @@ l2a: /* Step 2a: determine step direction */
   delete_constraint(R, m_J, A, u, iq, l);
   // s(ip) = CI.row(ip).dot(x) + ci0(ip); // does not compile if nIneqCon=0
   s(ip) = ci0(ip);
-  for (int tmp = 0; tmp < nVars; tmp++)
-    s(ip) += CI(ip, tmp) * x[tmp];
+  for (int tmp = 0; tmp < nVars; tmp++) s(ip) += CI(ip, tmp) * x[tmp];
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Partial step has taken " << t << std::endl;

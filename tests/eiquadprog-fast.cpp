@@ -64,7 +64,8 @@ BOOST_AUTO_TEST_CASE(test_unbiased) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
@@ -106,7 +107,8 @@ BOOST_AUTO_TEST_CASE(test_biased) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
@@ -152,7 +154,8 @@ BOOST_AUTO_TEST_CASE(test_equality_constraints) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
@@ -200,7 +203,8 @@ BOOST_AUTO_TEST_CASE(test_inequality_constraints) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
@@ -251,7 +255,8 @@ BOOST_AUTO_TEST_CASE(test_full) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
@@ -294,7 +299,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_equalities) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_REDUNDANT_EQUALITIES;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 }
@@ -335,7 +341,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_inequalities) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_INFEASIBLE;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_WARN_EQUAL(status, expected);
   BOOST_CHECK(status != EIQUADPROG_FAST_OPTIMAL);
@@ -381,7 +388,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_constraints) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_INFEASIBLE;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_WARN_EQUAL(status, expected);
   BOOST_CHECK(status != EIQUADPROG_FAST_OPTIMAL);
@@ -414,7 +422,8 @@ BOOST_AUTO_TEST_CASE(test_unbounded) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_UNBOUNDED;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_WARN_EQUAL(status, expected);
   BOOST_WARN(status != EIQUADPROG_FAST_OPTIMAL);  // SHOULD pass!
@@ -465,7 +474,8 @@ BOOST_AUTO_TEST_CASE(test_nonconvex) {
 
   EiquadprogFast_status expected = EIQUADPROG_FAST_OPTIMAL;
 
-  EiquadprogFast_status status = qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+  EiquadprogFast_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
 
   BOOST_CHECK_EQUAL(status, expected);
 
