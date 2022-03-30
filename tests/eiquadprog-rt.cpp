@@ -16,13 +16,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <iostream>
+#include "eiquadprog/eiquadprog-rt.hpp"
 
 #include <Eigen/Core>
-
 #include <boost/test/unit_test.hpp>
-
-#include "eiquadprog/eiquadprog-rt.hpp"
+#include <iostream>
 
 using namespace eiquadprog::solvers;
 

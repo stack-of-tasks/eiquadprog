@@ -1,8 +1,7 @@
-#include <iostream>
+#include "TestB.hpp"
 
 #include <Eigen/Core>
-
-#include "TestB.hpp"
+#include <iostream>
 
 using namespace eiquadprog::solvers;
 namespace eiquadprog {

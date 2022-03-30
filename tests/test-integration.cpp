@@ -1,8 +1,6 @@
-#include <iostream>
-
 #include <Eigen/Core>
-
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 #include "TestA.hpp"
 #include "TestB.hpp"

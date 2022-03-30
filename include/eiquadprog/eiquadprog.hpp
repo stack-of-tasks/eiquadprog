@@ -77,9 +77,8 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <Eigen/Core>
 #include <Eigen/Cholesky>
-
+#include <Eigen/Core>
 #include <iostream>
 
 #include "eiquadprog/eiquadprog-utils.hxx"

@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include "eiquadprog/eiquadprog-fast.hpp"
+
+#include <iostream>
 
 namespace eiquadprog {
 namespace solvers {
