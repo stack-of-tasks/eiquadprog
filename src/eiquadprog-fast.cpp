@@ -7,7 +7,7 @@ namespace solvers {
 
 EiquadprogFast::EiquadprogFast() {
   m_maxIter = DEFAULT_MAX_ITER;
-  q = 0;  // size of the active set A (containing the indices
+  q = 0; // size of the active set A (containing the indices
   // of the active constraints)
   is_inverse_provided_ = false;
   m_nVars = 0;
@@ -42,9 +42,10 @@ void EiquadprogFast::reset(size_t nVars, size_t nEqCon, size_t nIneqCon) {
 #endif
 }
 
-bool EiquadprogFast::add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R_norm) {
+bool EiquadprogFast::add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d,
+                                    size_t &iq, double &R_norm) {
   size_t nVars = J.rows();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';
 #endif
   size_t j, k;
@@ -60,17 +61,17 @@ bool EiquadprogFast::add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_
            decreasing j */
   for (j = d.size() - 1; j >= iq + 1; j--) {
     /* The Givens rotation is done with the matrix (cc cs, cs -cc).
-                    If cc is one, then element (j) of d is zero compared with element
-                    (j - 1). Hence we don't have to do anything.
-                    If cc is zero, then we just have to switch column (j) and column (j - 1)
-                    of J. Since we only switch columns in J, we have to be careful how we
-                    update d depending on the sign of gs.
-                    Otherwise we have to apply the Givens rotation to these columns.
-                    The i - 1 element of d has to be updated to h. */
+                    If cc is one, then element (j) of d is zero compared with
+       element (j - 1). Hence we don't have to do anything. If cc is zero, then
+       we just have to switch column (j) and column (j - 1) of J. Since we only
+       switch columns in J, we have to be careful how we update d depending on
+       the sign of gs. Otherwise we have to apply the Givens rotation to these
+       columns. The i - 1 element of d has to be updated to h. */
     cc = d(j - 1);
     ss = d(j);
     h = distance(cc, ss);
-    if (h == 0.0) continue;
+    if (h == 0.0)
+      continue;
     d(j) = 0.0;
     ss = ss / h;
     cc = cc / h;
@@ -83,7 +84,8 @@ bool EiquadprogFast::add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_
     xny = ss / (1.0 + cc);
 
 // #define OPTIMIZE_ADD_CONSTRAINT
-#ifdef OPTIMIZE_ADD_CONSTRAINT  // the optimized code is actually slower than the original
+#ifdef OPTIMIZE_ADD_CONSTRAINT // the optimized code is actually slower than the
+                               // original
     T1 = J.col(j - 1);
     cc_ss(0) = cc;
     cc_ss(1) = ss;
@@ -105,7 +107,7 @@ bool EiquadprogFast::add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_
 into column iq - 1 of R
 */
   R.col(iq - 1).head(iq) = d.head(iq);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << iq << std::endl;
 #endif
 
@@ -116,10 +118,11 @@ into column iq - 1 of R
   return true;
 }
 
-void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_t nEqCon, size_t& iq,
+void EiquadprogFast::delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A,
+                                       VectorXd &u, size_t nEqCon, size_t &iq,
                                        size_t l) {
   size_t nVars = R.rows();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Delete constraint " << l << ' ' << iq;
 #endif
   size_t i, j, k;
@@ -144,20 +147,23 @@ void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, Ve
   u(iq - 1) = u(iq);
   A(iq) = 0;
   u(iq) = 0.0;
-  for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
+  for (j = 0; j < iq; j++)
+    R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << '/' << iq << std::endl;
 #endif
 
-  if (iq == 0) return;
+  if (iq == 0)
+    return;
 
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
     h = distance(cc, ss);
-    if (h == 0.0) continue;
+    if (h == 0.0)
+      continue;
     cc = cc / h;
     ss = ss / h;
     R(j + 1, j) = 0.0;
@@ -184,36 +190,40 @@ void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, Ve
   }
 }
 
-EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const VectorXd& g0, const MatrixXd& CE,
-                                                     const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0,
-                                                     VectorXd& x) {
+EiquadprogFast_status EiquadprogFast::solve_quadprog(
+    const MatrixXd &Hess, const VectorXd &g0, const MatrixXd &CE,
+    const VectorXd &ce0, const MatrixXd &CI, const VectorXd &ci0, VectorXd &x) {
   const size_t nVars = g0.size();
   const size_t nEqCon = ce0.size();
   const size_t nIneqCon = ci0.size();
 
-  if (nVars != m_nVars || nEqCon != m_nEqCon || nIneqCon != m_nIneqCon) reset(nVars, nEqCon, nIneqCon);
+  if (nVars != m_nVars || nEqCon != m_nEqCon || nIneqCon != m_nIneqCon)
+    reset(nVars, nEqCon, nIneqCon);
 
-  assert(static_cast<size_t>(Hess.rows()) == m_nVars && static_cast<size_t>(Hess.cols()) == m_nVars);
+  assert(static_cast<size_t>(Hess.rows()) == m_nVars &&
+         static_cast<size_t>(Hess.cols()) == m_nVars);
   assert(static_cast<size_t>(g0.size()) == m_nVars);
-  assert(static_cast<size_t>(CE.rows()) == m_nEqCon && static_cast<size_t>(CE.cols()) == m_nVars);
+  assert(static_cast<size_t>(CE.rows()) == m_nEqCon &&
+         static_cast<size_t>(CE.cols()) == m_nVars);
   assert(static_cast<size_t>(ce0.size()) == m_nEqCon);
-  assert(static_cast<size_t>(CI.rows()) == m_nIneqCon && static_cast<size_t>(CI.cols()) == m_nVars);
+  assert(static_cast<size_t>(CI.rows()) == m_nIneqCon &&
+         static_cast<size_t>(CI.cols()) == m_nVars);
   assert(static_cast<size_t>(ci0.size()) == m_nIneqCon);
 
-  size_t i, k, l;  // indices
-  size_t ip;       // index of the chosen violated constraint
-  size_t iq;       // current number of active constraints
-  double psi;      // current sum of constraint violations
-  double c1;       // Hessian trace
-  double c2;       // Hessian Cholesky factor trace
-  double ss;       // largest constraint violation (negative for violation)
-  double R_norm;   // norm of matrix R
+  size_t i, k, l; // indices
+  size_t ip;      // index of the chosen violated constraint
+  size_t iq;      // current number of active constraints
+  double psi;     // current sum of constraint violations
+  double c1;      // Hessian trace
+  double c2;      // Hessian Cholesky factor trace
+  double ss;      // largest constraint violation (negative for violation)
+  double R_norm;  // norm of matrix R
   const double inf = std::numeric_limits<double>::infinity();
   double t, t1, t2;
   /* t is the step length, which is the minimum of the partial step length t1
    * and the full step length t2 */
 
-  iter = 0;  // active-set iteration number
+  iter = 0; // active-set iteration number
 
   /*
    * Preprocessing phase
@@ -248,7 +258,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
   }
 
   c2 = m_J.trace();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_matrix("m_J", m_J, nVars);
 #endif
 
@@ -275,7 +285,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
 #endif
   /* and compute the current solution value */
   f_value = 0.5 * g0.dot(x);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Unconstrained solution: " << f_value << std::endl;
   print_vector("x", x, nVars);
 #endif
@@ -292,7 +302,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
     update_z(z, m_J, d, iq);
     update_r(R, r, d, iq);
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     print_matrix("R", R, iq);
     print_vector("z", z, nVars);
     print_vector("r", r, iq);
@@ -328,7 +338,8 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_ADD_EQ_CONSTR);
 
   /* set iai = K \ A */
-  for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
+  for (i = 0; i < nIneqCon; i++)
+    iai(i) = static_cast<VectorXi::Scalar>(i);
 
 #ifdef USE_WARM_START
   //      DEBUG_STREAM("Gonna warm start using previous active
@@ -345,7 +356,8 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(const MatrixXd& Hess, const
        the minimum step in primal space s.t. the contraint
        becomes feasible */
     t2 = 0.0;
-    if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
+    if (std::abs(z.dot(z)) >
+        std::numeric_limits<double>::epsilon()) // i.e. z != 0
       t2 = (-np.dot(x) - ci0(ip)) / z.dot(np);
     else
       DEBUG_STREAM("[WARM START] z=0\n")
@@ -378,7 +390,7 @@ l1:
 
   START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1);
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_vector("x", x, nVars);
 #endif
   /* step 1: choose a violated constraint */
@@ -406,13 +418,15 @@ l1:
   }
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1_2);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_vector("s", s, nIneqCon);
 #endif
 
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1);
 
-  if (std::abs(psi) <= static_cast<double>(nIneqCon) * std::numeric_limits<double>::epsilon() * c1 * c2 * 100.0) {
+  if (std::abs(psi) <= static_cast<double>(nIneqCon) *
+                           std::numeric_limits<double>::epsilon() * c1 * c2 *
+                           100.0) {
     /* numerically there are not infeasibilities anymore */
     q = iq;
     //        DEBUG_STREAM("Optimal active
@@ -450,7 +464,7 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
 
   //      DEBUG_STREAM("Add constraint "<<ip<<" to active set\n")
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Trying with constraint " << ip << std::endl;
   print_vector("np", np, nVars);
 #endif
@@ -471,7 +485,7 @@ l2a: /* Step 2a: determine step direction */
   /* compute N* np (if q > 0): the negative of the
      step direction in the dual space */
   update_r(R, r, d, iq);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Step direction z" << std::endl;
   print_vector("z", z, nVars);
   print_vector("r", r, iq + 1);
@@ -506,8 +520,9 @@ l2a: /* Step 2a: determine step direction */
 
   /* the step is chosen as the minimum of t1 and t2 */
   t = std::min(t1, t2);
-#ifdef TRACE_SOLVER
-  std::cerr << "Step sizes: " << t << " (t1 = " << t1 << ", t2 = " << t2 << ") ";
+#ifdef EIQGUADPROG_TRACE_SOLVER
+  std::cerr << "Step sizes: " << t << " (t1 = " << t1 << ", t2 = " << t2
+            << ") ";
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2B);
 
@@ -527,7 +542,7 @@ l2a: /* Step 2a: determine step direction */
     u(iq) += t;
     iai(l) = static_cast<VectorXi::Scalar>(l);
     delete_constraint(R, m_J, A, u, nEqCon, iq, l);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << " in dual space: " << f_value << std::endl;
     print_vector("x", x, nVars);
     print_vector("z", z, nVars);
@@ -545,7 +560,7 @@ l2a: /* Step 2a: determine step direction */
   u.head(iq) -= t * r.head(iq);
   u(iq) += t;
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << " in both spaces: " << f_value << std::endl;
   print_vector("x", x, nVars);
   print_vector("u", u, iq + 1);
@@ -554,7 +569,7 @@ l2a: /* Step 2a: determine step direction */
 #endif
 
   if (t == t2) {
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << "Full step has taken " << t << std::endl;
     print_vector("x", x, nVars);
 #endif
@@ -563,11 +578,12 @@ l2a: /* Step 2a: determine step direction */
     if (!add_constraint(R, m_J, d, iq, R_norm)) {
       iaexcl(ip) = 0;
       delete_constraint(R, m_J, A, u, nEqCon, iq, ip);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
       print_matrix("R", R, nVars);
       print_vector("A", A, iq);
 #endif
-      for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
+      for (i = 0; i < nIneqCon; i++)
+        iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
         iai(A(i)) = -1;
@@ -578,7 +594,7 @@ l2a: /* Step 2a: determine step direction */
       goto l2; /* go to step 2 */
     } else
       iai(ip) = -1;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     print_matrix("R", R, nVars);
     print_vector("A", A, iq);
 #endif
@@ -591,7 +607,7 @@ l2a: /* Step 2a: determine step direction */
   delete_constraint(R, m_J, A, u, nEqCon, iq, l);
   s(ip) = CI.row(ip).dot(x) + ci0(ip);
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Partial step has taken " << t << std::endl;
   print_vector("x", x, nVars);
   print_matrix("R", R, nVars);

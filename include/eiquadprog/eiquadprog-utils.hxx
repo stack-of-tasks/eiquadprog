@@ -4,8 +4,7 @@
 #include <Eigen/Core>
 
 /// Compute sqrt(a^2 + b^2)
-template <typename Scalar>
-inline Scalar distance(Scalar a, Scalar b) {
+template <typename Scalar> inline Scalar distance(Scalar a, Scalar b) {
   Scalar a1, b1, t;
   a1 = std::abs(a);
   b1 = std::abs(b);
@@ -20,12 +19,12 @@ inline Scalar distance(Scalar a, Scalar b) {
 }
 
 template <class Derived>
-void print_vector(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << x.transpose() << std::endl;
+void print_vector(const char *name, Eigen::MatrixBase<Derived> &x, int n) {
+  std::cerr << name << x.transpose() << std::endl;
 }
 template <class Derived>
-void print_matrix(const char* name, Eigen::MatrixBase<Derived>& x, int n) {
-  //  std::cerr << name << std::endl << x << std::endl;
+void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int n) {
+  std::cerr << name << std::endl << x << std::endl;
 }
 
 #endif
