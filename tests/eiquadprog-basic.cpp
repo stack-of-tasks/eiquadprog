@@ -66,7 +66,8 @@ BOOST_AUTO_TEST_CASE(test_unbiased) {
 
   double val = 0.0;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK_CLOSE(out, val, 1e-6);
 
@@ -103,7 +104,8 @@ BOOST_AUTO_TEST_CASE(test_biased) {
 
   double val = -1.;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK_CLOSE(out, val, 1e-6);
 
@@ -144,7 +146,8 @@ BOOST_AUTO_TEST_CASE(test_equality_constraints) {
 
   double val = 0.25;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK_CLOSE(out, val, 1e-6);
 
@@ -187,7 +190,8 @@ BOOST_AUTO_TEST_CASE(test_inequality_constraints) {
 
   double val = 1.;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK_CLOSE(out, val, 1e-6);
 
@@ -233,7 +237,8 @@ BOOST_AUTO_TEST_CASE(test_full) {
 
   double val = 1.5;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK_CLOSE(out, val, 1e-6);
 
@@ -272,7 +277,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_equalities) {
   Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   // DOES NOT WORK!?
   BOOST_WARN(std::isinf(out));
@@ -309,7 +315,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_inequalities) {
   Eigen::VectorXi activeSet(2);
   size_t activeSetSize;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK(std::isinf(out));
 }
@@ -349,7 +356,8 @@ BOOST_AUTO_TEST_CASE(test_unfeasible_constraints) {
   Eigen::VectorXi activeSet(3);
   size_t activeSetSize;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   BOOST_CHECK(std::isinf(out));
 }
@@ -378,7 +386,8 @@ BOOST_AUTO_TEST_CASE(test_unbounded) {
   Eigen::VectorXi activeSet(0);
   size_t activeSetSize;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   // DOES NOT WORK!?
   BOOST_WARN(std::isinf(out));
@@ -426,7 +435,8 @@ BOOST_AUTO_TEST_CASE(test_nonconvex) {
 
   double val = -1.;
 
-  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x, activeSet, activeSetSize);
+  double out = eiquadprog::solvers::solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq,
+                                                   x, activeSet, activeSetSize);
 
   // DOES NOT WORK!?
   BOOST_WARN_CLOSE(out, val, 1e-6);

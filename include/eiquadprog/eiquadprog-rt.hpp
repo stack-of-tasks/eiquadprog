@@ -21,6 +21,8 @@
 
 #include <Eigen/Dense>
 
+#include "eiquadprog/eiquadprog-utils.hxx"
+
 #define OPTIMIZE_STEP_1_2         // compute s(x) = ci^T * x + ci0
 #define OPTIMIZE_COMPUTE_D        // use noalias
 #define OPTIMIZE_UPDATE_Z         // use noalias
@@ -48,7 +50,8 @@
 #define PROFILE_EIQUADPROG_STEP_1 "EIQUADPROG_RT STEP_1"
 #define PROFILE_EIQUADPROG_STEP_1_1 "EIQUADPROG_RT STEP_1_1"
 #define PROFILE_EIQUADPROG_STEP_1_2 "EIQUADPROG_RT STEP_1_2"
-#define PROFILE_EIQUADPROG_STEP_1_UNCONSTR_MINIM "EIQUADPROG_RT STEP_1_UNCONSTR_MINIM"
+#define PROFILE_EIQUADPROG_STEP_1_UNCONSTR_MINIM \
+  "EIQUADPROG_RT STEP_1_UNCONSTR_MINIM"
 #define PROFILE_EIQUADPROG_STEP_2 "EIQUADPROG_RT STEP_2"
 #define PROFILE_EIQUADPROG_STEP_2A "EIQUADPROG_RT STEP_2A"
 #define PROFILE_EIQUADPROG_STEP_2B "EIQUADPROG_RT STEP_2B"
@@ -71,7 +74,6 @@ namespace eiquadprog {
 
 namespace solvers {
 
-#include "eiquadprog/eiquadprog-utils.hxx"
 /**
  * Possible states of the solver.
  */
@@ -118,7 +120,10 @@ class RtEiquadprog {
   /**
    * @return The Lagrange multipliers
    */
-  const typename RtVectorX<nIneqCon + nEqCon>::d& getLagrangeMultipliers() const { return u; }
+  const typename RtVectorX<nIneqCon + nEqCon>::d& getLagrangeMultipliers()
+      const {
+    return u;
+  }
 
   /**
    * Return the active set, namely the indeces of active constraints.
@@ -128,7 +133,9 @@ class RtEiquadprog {
    * is the size of the active set.
    * @return The set of indexes of the active constraints.
    */
-  const typename RtVectorX<nIneqCon + nEqCon>::i& getActiveSet() const { return A; }
+  const typename RtVectorX<nIneqCon + nEqCon>::i& getActiveSet() const {
+    return A;
+  }
 
   /**
    * solves the problem
@@ -136,12 +143,14 @@ class RtEiquadprog {
    * s.t. CE x + ce0 = 0
    *      CI x + ci0 >= 0
    */
-  RtEiquadprog_status solve_quadprog(const typename RtMatrixX<nVars, nVars>::d& Hess,
-                                     const typename RtVectorX<nVars>::d& g0,
-                                     const typename RtMatrixX<nEqCon, nVars>::d& CE,
-                                     const typename RtVectorX<nEqCon>::d& ce0,
-                                     const typename RtMatrixX<nIneqCon, nVars>::d& CI,
-                                     const typename RtVectorX<nIneqCon>::d& ci0, typename RtVectorX<nVars>::d& x);
+  RtEiquadprog_status solve_quadprog(
+      const typename RtMatrixX<nVars, nVars>::d& Hess,
+      const typename RtVectorX<nVars>::d& g0,
+      const typename RtMatrixX<nEqCon, nVars>::d& CE,
+      const typename RtVectorX<nEqCon>::d& ce0,
+      const typename RtMatrixX<nIneqCon, nVars>::d& CI,
+      const typename RtVectorX<nIneqCon>::d& ci0,
+      typename RtVectorX<nVars>::d& x);
 
   typename RtMatrixX<nVars, nVars>::d m_J;  // J * J' = Hessian
   bool is_inverse_provided_;
@@ -153,7 +162,8 @@ class RtEiquadprog {
   Eigen::LLT<typename RtMatrixX<nVars, nVars>::d, Eigen::Lower> chol_;
   double solver_return_;
 
-  /// from QR of L' N, where L is Cholewsky factor of Hessian, and N is the matrix of active constraints
+  /// from QR of L' N, where L is Cholewsky factor of Hessian, and N is the
+  /// matrix of active constraints
   typename RtMatrixX<nVars, nVars>::d R;
 
   /// CI*x+ci0
@@ -187,8 +197,8 @@ class RtEiquadprog {
   /// initialized as [1, ..., 1, .]
   /// if iaexcl(i)!=1 inequality constraint i cannot be added to the active set
   /// if adding ineq constraint i fails => iaexcl(i)=0
-  /// iaexcl(i)=0 iff ineq constraint i is linearly dependent to other active constraints
-  /// iaexcl(i)=1 otherwise
+  /// iaexcl(i)=0 iff ineq constraint i is linearly dependent to other active
+  /// constraints iaexcl(i)=1 otherwise
   typename RtVectorX<nIneqCon>::i iaexcl;
 
   typename RtVectorX<nVars>::d x_old;              // old value of x
@@ -199,7 +209,8 @@ class RtEiquadprog {
   typename RtVectorX<nVars>::d T1;  // tmp vector
 #endif
 
-  /// size of the active set A (containing the indices of the active constraints)
+  /// size of the active set A (containing the indices of the active
+  /// constraints)
   int q;
 
   /// number of active-set iterations
@@ -220,7 +231,8 @@ class RtEiquadprog {
     return a1 * std::sqrt(2.0);
   }
 
-  inline void compute_d(typename RtVectorX<nVars>::d& d, const typename RtMatrixX<nVars, nVars>::d& J,
+  inline void compute_d(typename RtVectorX<nVars>::d& d,
+                        const typename RtMatrixX<nVars, nVars>::d& J,
                         const typename RtVectorX<nVars>::d& np) {
 #ifdef OPTIMIZE_COMPUTE_D
     d.noalias() = J.adjoint() * np;
@@ -229,7 +241,8 @@ class RtEiquadprog {
 #endif
   }
 
-  inline void update_z(typename RtVectorX<nVars>::d& z, const typename RtMatrixX<nVars, nVars>::d& J,
+  inline void update_z(typename RtVectorX<nVars>::d& z,
+                       const typename RtMatrixX<nVars, nVars>::d& J,
                        const typename RtVectorX<nVars>::d& d, int iq) {
 #ifdef OPTIMIZE_UPDATE_Z
     z.noalias() = J.rightCols(nVars - iq) * d.tail(nVars - iq);
@@ -238,24 +251,31 @@ class RtEiquadprog {
 #endif
   }
 
-  inline void update_r(const typename RtMatrixX<nVars, nVars>::d& R, typename RtVectorX<nIneqCon + nEqCon>::d& r,
+  inline void update_r(const typename RtMatrixX<nVars, nVars>::d& R,
+                       typename RtVectorX<nIneqCon + nEqCon>::d& r,
                        const typename RtVectorX<nVars>::d& d, int iq) {
     r.head(iq) = d.head(iq);
-    R.topLeftCorner(iq, iq).template triangularView<Eigen::Upper>().solveInPlace(r.head(iq));
+    R.topLeftCorner(iq, iq)
+        .template triangularView<Eigen::Upper>()
+        .solveInPlace(r.head(iq));
   }
 
-  bool add_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
+  bool add_constraint(typename RtMatrixX<nVars, nVars>::d& R,
+                      typename RtMatrixX<nVars, nVars>::d& J,
                       typename RtVectorX<nVars>::d& d, int& iq, double& R_norm);
 
-  void delete_constraint(typename RtMatrixX<nVars, nVars>::d& R, typename RtMatrixX<nVars, nVars>::d& J,
-                         typename RtVectorX<nIneqCon + nEqCon>::i& A, typename RtVectorX<nIneqCon + nEqCon>::d& u,
-                         int& iq, int l);
+  void delete_constraint(typename RtMatrixX<nVars, nVars>::d& R,
+                         typename RtMatrixX<nVars, nVars>::d& J,
+                         typename RtVectorX<nIneqCon + nEqCon>::i& A,
+                         typename RtVectorX<nIneqCon + nEqCon>::d& u, int& iq,
+                         int l);
 };
 
 } /* namespace solvers */
 } /* namespace eiquadprog */
 
 #include "eiquadprog/eiquadprog-rt.hxx"
-/* --- Details -------------------------------------------------------------------- */
+/* --- Details
+ * -------------------------------------------------------------------- */
 
 #endif /* __eiquadprog_rt_hpp__ */
