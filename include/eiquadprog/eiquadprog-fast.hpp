@@ -57,11 +57,11 @@
 
 #define DEFAULT_MAX_ITER 1000
 
+#include "eiquadprog/eiquadprog-utils.hxx"
+
 namespace eiquadprog {
 
 namespace solvers {
-
-#include "eiquadprog/eiquadprog-utils.hxx"
 
 /**
  * Possible states of the solver.

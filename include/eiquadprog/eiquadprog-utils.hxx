@@ -5,6 +5,7 @@
 #include <iostream>
 
 namespace eiquadprog {
+namespace utils {
 
 /// Compute sqrt(a^2 + b^2)
 template <typename Scalar> inline Scalar distance(Scalar a, Scalar b) {
@@ -22,14 +23,14 @@ template <typename Scalar> inline Scalar distance(Scalar a, Scalar b) {
 }
 
 template <class Derived>
-void print_vector(const char *name, Eigen::MatrixBase<Derived> &x, int n) {
+void print_vector(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
   std::cerr << name << x.transpose() << std::endl;
 }
 template <class Derived>
-void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int n) {
+void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
   std::cerr << name << std::endl << x << std::endl;
 }
 
-} // namespace eiquadprog
+}} // namespace eiquadprog::utils
 
 #endif

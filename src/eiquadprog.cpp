@@ -101,7 +101,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
   chol.matrixU().solveInPlace(J);
   c2 = J.trace();
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_matrix("J", J, n);
+  utils::print_matrix("J", J, n);
 #endif
 
   /* c1 * c2 is an estimate for cond(G) */
@@ -117,7 +117,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
   f_value = 0.5 * g0.dot(x);
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Unconstrained solution: " << f_value << std::endl;
-  print_vector("x", x, n);
+  utils::print_vector("x", x, n);
 #endif
 
   /* Add equality constraints to the working set A */
@@ -128,10 +128,10 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
     update_z(z, J, d, iq);
     update_r(R, r, d, iq);
 #ifdef EIQGUADPROG_TRACE_SOLVER
-    print_matrix("R", R, iq);
-    print_vector("z", z, n);
-    print_vector("r", r, iq);
-    print_vector("d", d, n);
+    utils::print_matrix("R", R, iq);
+    utils::print_vector("z", z, n);
+    utils::print_vector("r", r, iq);
+    utils::print_vector("d", d, n);
 #endif
 
     /* compute full step length t2: i.e., the minimum step in primal space s.t.
@@ -165,7 +165,7 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
 l1:
   iter++;
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_vector("x", x, n);
+  utils::print_vector("x", x, n);
 #endif
   /* step 1: choose a violated constraint */
   for (i = me; i < iq; i++) {
@@ -184,7 +184,7 @@ l1:
     psi += std::min(0.0, sum);
   }
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_vector("s", s, mi);
+  utils::print_vector("s", s, mi);
 #endif
 
   if (std::abs(psi) <= static_cast<double>(mi) *
@@ -221,7 +221,7 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Trying with constraint " << ip << std::endl;
-  print_vector("np", np, n);
+  utils::print_vector("np", np, n);
 #endif
 
 l2a: /* Step 2a: determine step direction */
@@ -234,11 +234,11 @@ l2a: /* Step 2a: determine step direction */
   update_r(R, r, d, iq);
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Step direction z" << std::endl;
-  print_vector("z", z, n);
-  print_vector("r", r, iq + 1);
-  print_vector("u", u, iq + 1);
-  print_vector("d", d, n);
-  print_vector("A", A, iq + 1);
+  utils::print_vector("z", z, n);
+  utils::print_vector("r", r, iq + 1);
+  utils::print_vector("u", u, iq + 1);
+  utils::print_vector("d", d, n);
+  utils::print_vector("A", A, iq + 1);
 #endif
 
   /* Step 2b: compute step length */
@@ -287,9 +287,9 @@ l2a: /* Step 2a: determine step direction */
     delete_constraint(R, J, A, u, p, iq, l);
 #ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << " in dual space: " << f_value << std::endl;
-    print_vector("x", x, n);
-    print_vector("z", z, n);
-    print_vector("A", A, iq + 1);
+    utils::print_vector("x", x, n);
+    utils::print_vector("z", z, n);
+    utils::print_vector("A", A, iq + 1);
 #endif
     goto l2a;
   }
@@ -304,16 +304,16 @@ l2a: /* Step 2a: determine step direction */
   u(iq) += t;
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << " in both spaces: " << f_value << std::endl;
-  print_vector("x", x, n);
-  print_vector("u", u, iq + 1);
-  print_vector("r", r, iq + 1);
-  print_vector("A", A, iq + 1);
+  utils::print_vector("x", x, n);
+  utils::print_vector("u", u, iq + 1);
+  utils::print_vector("r", r, iq + 1);
+  utils::print_vector("A", A, iq + 1);
 #endif
 
   if (t == t2) {
 #ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << "Full step has taken " << t << std::endl;
-    print_vector("x", x, n);
+    utils::print_vector("x", x, n);
 #endif
     /* full step has taken */
     /* add constraint ip to the active set*/
@@ -321,8 +321,8 @@ l2a: /* Step 2a: determine step direction */
       iaexcl(ip) = 0;
       delete_constraint(R, J, A, u, p, iq, ip);
 #ifdef EIQGUADPROG_TRACE_SOLVER
-      print_matrix("R", R, n);
-      print_vector("A", A, iq);
+      utils::print_matrix("R", R, n);
+      utils::print_vector("A", A, iq);
 #endif
       for (i = 0; i < m; i++)
         iai(i) = static_cast<VectorXi::Scalar>(i);
@@ -336,8 +336,8 @@ l2a: /* Step 2a: determine step direction */
     } else
       iai(ip) = -1;
 #ifdef EIQGUADPROG_TRACE_SOLVER
-    print_matrix("R", R, n);
-    print_vector("A", A, iq);
+    utils::print_matrix("R", R, n);
+    utils::print_vector("A", A, iq);
 #endif
     goto l1;
   }
@@ -345,20 +345,20 @@ l2a: /* Step 2a: determine step direction */
   /* a patial step has taken */
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Partial step has taken " << t << std::endl;
-  print_vector("x", x, n);
+  utils::print_vector("x", x, n);
 #endif
   /* drop constraint l */
   iai(l) = static_cast<VectorXi::Scalar>(l);
   delete_constraint(R, J, A, u, p, iq, l);
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_matrix("R", R, n);
-  print_vector("A", A, iq);
+  utils::print_matrix("R", R, n);
+  utils::print_vector("A", A, iq);
 #endif
 
   s(ip) = CI.col(ip).dot(x) + ci0(ip);
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_vector("s", s, mi);
+  utils::print_vector("s", s, mi);
 #endif
   goto l2a;
 }
@@ -387,7 +387,7 @@ bool add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d, size_t &iq,
        The i - 1 element of d has to be updated to h. */
     cc = d(j - 1);
     ss = d(j);
-    h = distance(cc, ss);
+    h = utils::distance(cc, ss);
     if (h == 0.0)
       continue;
     d(j) = 0.0;
@@ -465,7 +465,7 @@ void delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A, VectorXd &u,
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
-    h = distance(cc, ss);
+    h = utils::distance(cc, ss);
     if (h == 0.0)
       continue;
     cc = cc / h;

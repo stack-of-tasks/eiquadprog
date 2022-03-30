@@ -69,7 +69,7 @@ bool EiquadprogFast::add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d,
        columns. The i - 1 element of d has to be updated to h. */
     cc = d(j - 1);
     ss = d(j);
-    h = distance(cc, ss);
+    h = utils::distance(cc, ss);
     if (h == 0.0)
       continue;
     d(j) = 0.0;
@@ -161,7 +161,7 @@ void EiquadprogFast::delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A,
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
-    h = distance(cc, ss);
+    h = utils::distance(cc, ss);
     if (h == 0.0)
       continue;
     cc = cc / h;
@@ -259,7 +259,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
 
   c2 = m_J.trace();
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_matrix("m_J", m_J, nVars);
+  utils::print_matrix("m_J", m_J, nVars);
 #endif
 
   /* c1 * c2 is an estimate for cond(Hess) */
@@ -287,7 +287,7 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
   f_value = 0.5 * g0.dot(x);
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Unconstrained solution: " << f_value << std::endl;
-  print_vector("x", x, nVars);
+  utils::print_vector("x", x, nVars);
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1_UNCONSTR_MINIM);
 
@@ -303,10 +303,10 @@ EiquadprogFast_status EiquadprogFast::solve_quadprog(
     update_r(R, r, d, iq);
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
-    print_matrix("R", R, iq);
-    print_vector("z", z, nVars);
-    print_vector("r", r, iq);
-    print_vector("d", d, nVars);
+    utils::print_matrix("R", R, iq);
+    utils::print_vector("z", z, nVars);
+    utils::print_vector("r", r, iq);
+    utils::print_vector("d", d, nVars);
 #endif
 
     /* compute full step length t2: i.e.,
@@ -391,7 +391,7 @@ l1:
   START_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1);
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_vector("x", x, nVars);
+  utils::print_vector("x", x, nVars);
 #endif
   /* step 1: choose a violated constraint */
   for (i = nEqCon; i < iq; i++) {
@@ -419,7 +419,7 @@ l1:
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1_2);
 #ifdef EIQGUADPROG_TRACE_SOLVER
-  print_vector("s", s, nIneqCon);
+  utils::print_vector("s", s, nIneqCon);
 #endif
 
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_1);
@@ -466,7 +466,7 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Trying with constraint " << ip << std::endl;
-  print_vector("np", np, nVars);
+  utils::print_vector("np", np, nVars);
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2);
 
@@ -487,11 +487,11 @@ l2a: /* Step 2a: determine step direction */
   update_r(R, r, d, iq);
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Step direction z" << std::endl;
-  print_vector("z", z, nVars);
-  print_vector("r", r, iq + 1);
-  print_vector("u", u, iq + 1);
-  print_vector("d", d, nVars);
-  print_vector("A", A, iq + 1);
+  utils::print_vector("z", z, nVars);
+  utils::print_vector("r", r, iq + 1);
+  utils::print_vector("u", u, iq + 1);
+  utils::print_vector("d", d, nVars);
+  utils::print_vector("A", A, iq + 1);
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2A);
 
@@ -544,9 +544,9 @@ l2a: /* Step 2a: determine step direction */
     delete_constraint(R, m_J, A, u, nEqCon, iq, l);
 #ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << " in dual space: " << f_value << std::endl;
-    print_vector("x", x, nVars);
-    print_vector("z", z, nVars);
-    print_vector("A", A, iq + 1);
+    utils::print_vector("x", x, nVars);
+    utils::print_vector("z", z, nVars);
+    utils::print_vector("A", A, iq + 1);
 #endif
     STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2C);
     goto l2a;
@@ -562,16 +562,16 @@ l2a: /* Step 2a: determine step direction */
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << " in both spaces: " << f_value << std::endl;
-  print_vector("x", x, nVars);
-  print_vector("u", u, iq + 1);
-  print_vector("r", r, iq + 1);
-  print_vector("A", A, iq + 1);
+  utils::print_vector("x", x, nVars);
+  utils::print_vector("u", u, iq + 1);
+  utils::print_vector("r", r, iq + 1);
+  utils::print_vector("A", A, iq + 1);
 #endif
 
   if (t == t2) {
 #ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << "Full step has taken " << t << std::endl;
-    print_vector("x", x, nVars);
+    utils::print_vector("x", x, nVars);
 #endif
     /* full step has taken */
     /* add constraint ip to the active set*/
@@ -579,8 +579,8 @@ l2a: /* Step 2a: determine step direction */
       iaexcl(ip) = 0;
       delete_constraint(R, m_J, A, u, nEqCon, iq, ip);
 #ifdef EIQGUADPROG_TRACE_SOLVER
-      print_matrix("R", R, nVars);
-      print_vector("A", A, iq);
+      utils::print_matrix("R", R, nVars);
+      utils::print_vector("A", A, iq);
 #endif
       for (i = 0; i < nIneqCon; i++)
         iai(i) = static_cast<VectorXi::Scalar>(i);
@@ -595,8 +595,8 @@ l2a: /* Step 2a: determine step direction */
     } else
       iai(ip) = -1;
 #ifdef EIQGUADPROG_TRACE_SOLVER
-    print_matrix("R", R, nVars);
-    print_vector("A", A, iq);
+    utils::print_matrix("R", R, nVars);
+    utils::print_vector("A", A, iq);
 #endif
     STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2C);
     goto l1;
@@ -609,10 +609,10 @@ l2a: /* Step 2a: determine step direction */
 
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Partial step has taken " << t << std::endl;
-  print_vector("x", x, nVars);
-  print_matrix("R", R, nVars);
-  print_vector("A", A, iq);
-  print_vector("s", s, nIneqCon);
+  utils::print_vector("x", x, nVars);
+  utils::print_matrix("R", R, nVars);
+  utils::print_vector("A", A, iq);
+  utils::print_vector("s", s, nIneqCon);
 #endif
   STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2C);
 

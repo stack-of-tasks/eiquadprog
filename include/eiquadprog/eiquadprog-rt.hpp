@@ -20,6 +20,7 @@
 #define __eiquadprog_rt_hpp__
 
 #include <Eigen/Dense>
+#include "eiquadprog/eiquadprog-utils.hxx"
 
 #define OPTIMIZE_STEP_1_2         // compute s(x) = ci^T * x + ci0
 #define OPTIMIZE_COMPUTE_D        // use noalias
@@ -71,7 +72,6 @@ namespace eiquadprog {
 
 namespace solvers {
 
-#include "eiquadprog/eiquadprog-utils.hxx"
 /**
  * Possible states of the solver.
  */
