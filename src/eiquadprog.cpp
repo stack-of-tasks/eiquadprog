@@ -5,8 +5,25 @@ namespace solvers {
 using namespace Eigen;
 
 /* solve_quadprog is used for on-demand QP solving */
-double solve_quadprog(MatrixXd& G, VectorXd& g0, const MatrixXd& CE, const VectorXd& ce0, const MatrixXd& CI,
-                      const VectorXd& ci0, VectorXd& x, VectorXi& activeSet, size_t& activeSetSize) {
+
+double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
+                      const VectorXd &ce0, const MatrixXd &CI,
+                      const VectorXd &ci0, VectorXd &x, VectorXi &activeSet,
+                      size_t &activeSetSize) {
+
+  Eigen::DenseIndex p = CE.cols();
+  Eigen::DenseIndex m = CI.cols();
+
+  VectorXd y(p + m);
+
+  return solve_quadprog(G, g0, CE, ce0, CI, ci0, x, y, activeSet,
+                        activeSetSize);
+}
+
+double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
+                      const VectorXd &ce0, const MatrixXd &CI,
+                      const VectorXd &ci0, VectorXd &x, VectorXd &y,
+                      VectorXi &activeSet, size_t &activeSetSize) {
   LLT<MatrixXd, Lower> chol(G.cols());
   double c1;
   /* compute the trace of the original matrix G */
@@ -15,15 +32,33 @@ double solve_quadprog(MatrixXd& G, VectorXd& g0, const MatrixXd& CE, const Vecto
   /* decompose the matrix G in the form LL^T */
   chol.compute(G);
 
-  return solve_quadprog2(chol, c1, g0, CE, ce0, CI, ci0, x, activeSet, activeSetSize);
+  return solve_quadprog(chol, c1, g0, CE, ce0, CI, ci0, x, y, activeSet,
+                        activeSetSize);
 }
 
-/* solve_quadprog2 is used for when the Cholesky decomposition of G is pre-computed
+double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
+                      const MatrixXd &CE, const VectorXd &ce0,
+                      const MatrixXd &CI, const VectorXd &ci0, VectorXd &x,
+                      VectorXi &activeSet, size_t &activeSetSize) {
+
+  Eigen::DenseIndex p = CE.cols();
+  Eigen::DenseIndex m = CI.cols();
+
+  VectorXd y(p + m);
+
+  return solve_quadprog(chol, c1, g0, CE, ce0, CI, ci0, x, y, activeSet,
+                        activeSetSize);
+}
+
+/* solve_quadprog2 is used for when the Cholesky decomposition of G is
+ * pre-computed
  * @param A Output vector containing the indexes of the active constraints.
  * @param q Output value representing the size of the active set.
  */
-double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, const MatrixXd& CE, const VectorXd& ce0,
-                       const MatrixXd& CI, const VectorXd& ci0, VectorXd& x, VectorXi& A, size_t& q) {
+double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
+                      const MatrixXd &CE, const VectorXd &ce0,
+                      const MatrixXd &CI, const VectorXd &ci0, VectorXd &x,
+                      VectorXd &u, VectorXi &A, size_t &q) {
   size_t i, k, l; /* indices */
   size_t ip, me, mi;
   size_t n = g0.size();
@@ -31,21 +66,24 @@ double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, cons
   size_t m = CI.cols();
   MatrixXd R(g0.size(), g0.size()), J(g0.size(), g0.size());
 
-  VectorXd s(m + p), z(n), r(m + p), d(n), np(n), u(m + p);
+  VectorXd s(m + p), z(n), r(m + p), d(n), np(n);
   VectorXd x_old(n), u_old(m + p);
   double f_value, psi, c2, sum, ss, R_norm;
   const double inf = std::numeric_limits<double>::infinity();
-  double t, t1, t2; /* t is the step length, which is the minimum of the partial step length t1
-                     * and the full step length t2 */
-  //        VectorXi A(m + p); // Del Prete: active set is now an output parameter
-  if (static_cast<size_t>(A.size()) != m + p) A.resize(m + p);
+  double t, t1, t2; /* t is the step length, which is the minimum of the partial
+                     * step length t1 and the full step length t2 */
+  //        VectorXi A(m + p); // Del Prete: active set is now an output
+  //        parameter
+  if (static_cast<size_t>(A.size()) != m + p)
+    A.resize(m + p);
   VectorXi A_old(m + p), iai(m + p), iaexcl(m + p);
   //        int q;
   size_t iq, iter = 0;
 
   me = p; /* number of equality constraints */
   mi = m; /* number of inequality constraints */
-  q = 0;  /* size of the active set A (containing the indices of the active constraints) */
+  q = 0;  /* size of the active set A (containing the indices of the active
+             constraints) */
 
   /*
    * Preprocessing phase
@@ -56,12 +94,13 @@ double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, cons
   R.setZero();
   R_norm = 1.0; /* this variable will hold the norm of the matrix R */
 
-  /* compute the inverse of the factorized matrix G^-1, this is the initial value for H */
+  /* compute the inverse of the factorized matrix G^-1, this is the initial
+   * value for H */
   // J = L^-T
   J.setIdentity();
-  J = chol.matrixU().solve(J);
+  chol.matrixU().solveInPlace(J);
   c2 = J.trace();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_matrix("J", J, n);
 #endif
 
@@ -72,11 +111,11 @@ double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, cons
    * this is a feasible point in the dual space
    * x = G^-1 * g0
    */
-  x = chol.solve(g0);
-  x = -x;
+  x = -g0;
+  chol.solveInPlace(x);
   /* and compute the current solution value */
   f_value = 0.5 * g0.dot(x);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Unconstrained solution: " << f_value << std::endl;
   print_vector("x", x, n);
 #endif
@@ -88,17 +127,18 @@ double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, cons
     compute_d(d, J, np);
     update_z(z, J, d, iq);
     update_r(R, r, d, iq);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     print_matrix("R", R, iq);
     print_vector("z", z, n);
     print_vector("r", r, iq);
     print_vector("d", d, n);
 #endif
 
-    /* compute full step length t2: i.e., the minimum step in primal space s.t. the contraint
-       becomes feasible */
+    /* compute full step length t2: i.e., the minimum step in primal space s.t.
+       the contraint becomes feasible */
     t2 = 0.0;
-    if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
+    if (std::abs(z.dot(z)) >
+        std::numeric_limits<double>::epsilon()) // i.e. z != 0
       t2 = (-np.dot(x) - ce0(i)) / z.dot(np);
 
     x += t2 * z;
@@ -119,11 +159,12 @@ double solve_quadprog2(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0, cons
   }
 
   /* set iai = K \ A */
-  for (i = 0; i < mi; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
+  for (i = 0; i < mi; i++)
+    iai(i) = static_cast<VectorXi::Scalar>(i);
 
 l1:
   iter++;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_vector("x", x, n);
 #endif
   /* step 1: choose a violated constraint */
@@ -142,11 +183,13 @@ l1:
     s(i) = sum;
     psi += std::min(0.0, sum);
   }
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_vector("s", s, mi);
 #endif
 
-  if (std::abs(psi) <= static_cast<double>(mi) * std::numeric_limits<double>::epsilon() * c1 * c2 * 100.0) {
+  if (std::abs(psi) <= static_cast<double>(mi) *
+                           std::numeric_limits<double>::epsilon() * c1 * c2 *
+                           100.0) {
     /* numerically there are not infeasibilities anymore */
     q = iq;
     return f_value;
@@ -176,18 +219,20 @@ l2: /* Step 2: check for feasibility and determine a new S-pair */
   /* add ip to the active set A */
   A(iq) = static_cast<VectorXi::Scalar>(ip);
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Trying with constraint " << ip << std::endl;
   print_vector("np", np, n);
 #endif
 
 l2a: /* Step 2a: determine step direction */
-  /* compute z = H np: the step direction in the primal space (through J, see the paper) */
+  /* compute z = H np: the step direction in the primal space (through J, see
+   * the paper) */
   compute_d(d, J, np);
   update_z(z, J, d, iq);
-  /* compute N* np (if q > 0): the negative of the step direction in the dual space */
+  /* compute N* np (if q > 0): the negative of the step direction in the dual
+   * space */
   update_r(R, r, d, iq);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Step direction z" << std::endl;
   print_vector("z", z, n);
   print_vector("r", r, iq + 1);
@@ -198,7 +243,8 @@ l2a: /* Step 2a: determine step direction */
 
   /* Step 2b: compute step length */
   l = 0;
-  /* Compute t1: partial step length (maximum step in dual space without violating dual feasibility */
+  /* Compute t1: partial step length (maximum step in dual space without
+   * violating dual feasibility */
   t1 = inf; /* +inf */
   /* find the index l s.t. it reaches the minimum of u+(x) / r */
   for (k = me; k < iq; k++) {
@@ -208,16 +254,19 @@ l2a: /* Step 2a: determine step direction */
       l = A(k);
     }
   }
-  /* Compute t2: full step length (minimum step in primal space such that the constraint ip becomes feasible */
-  if (std::abs(z.dot(z)) > std::numeric_limits<double>::epsilon())  // i.e. z != 0
+  /* Compute t2: full step length (minimum step in primal space such that the
+   * constraint ip becomes feasible */
+  if (std::abs(z.dot(z)) >
+      std::numeric_limits<double>::epsilon()) // i.e. z != 0
     t2 = -s(ip) / z.dot(np);
   else
     t2 = inf; /* +inf */
 
   /* the step is chosen as the minimum of t1 and t2 */
   t = std::min(t1, t2);
-#ifdef TRACE_SOLVER
-  std::cerr << "Step sizes: " << t << " (t1 = " << t1 << ", t2 = " << t2 << ") ";
+#ifdef EIQGUADPROG_TRACE_SOLVER
+  std::cerr << "Step sizes: " << t << " (t1 = " << t1 << ", t2 = " << t2
+            << ") ";
 #endif
 
   /* Step 2c: determine new S-pair and take step: */
@@ -236,7 +285,7 @@ l2a: /* Step 2a: determine step direction */
     u(iq) += t;
     iai(l) = static_cast<VectorXi::Scalar>(l);
     delete_constraint(R, J, A, u, p, iq, l);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << " in dual space: " << f_value << std::endl;
     print_vector("x", x, n);
     print_vector("z", z, n);
@@ -253,7 +302,7 @@ l2a: /* Step 2a: determine step direction */
 
   u.head(iq) -= t * r.head(iq);
   u(iq) += t;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << " in both spaces: " << f_value << std::endl;
   print_vector("x", x, n);
   print_vector("u", u, iq + 1);
@@ -262,7 +311,7 @@ l2a: /* Step 2a: determine step direction */
 #endif
 
   if (t == t2) {
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     std::cerr << "Full step has taken " << t << std::endl;
     print_vector("x", x, n);
 #endif
@@ -271,11 +320,12 @@ l2a: /* Step 2a: determine step direction */
     if (!add_constraint(R, J, d, iq, R_norm)) {
       iaexcl(ip) = 0;
       delete_constraint(R, J, A, u, p, iq, ip);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
       print_matrix("R", R, n);
       print_vector("A", A, iq);
 #endif
-      for (i = 0; i < m; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
+      for (i = 0; i < m; i++)
+        iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
         iai(A(i)) = -1;
@@ -285,7 +335,7 @@ l2a: /* Step 2a: determine step direction */
       goto l2; /* go to step 2 */
     } else
       iai(ip) = -1;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
     print_matrix("R", R, n);
     print_vector("A", A, iq);
 #endif
@@ -293,29 +343,30 @@ l2a: /* Step 2a: determine step direction */
   }
 
   /* a patial step has taken */
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Partial step has taken " << t << std::endl;
   print_vector("x", x, n);
 #endif
   /* drop constraint l */
   iai(l) = static_cast<VectorXi::Scalar>(l);
   delete_constraint(R, J, A, u, p, iq, l);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_matrix("R", R, n);
   print_vector("A", A, iq);
 #endif
 
   s(ip) = CI.col(ip).dot(x) + ci0(ip);
 
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   print_vector("s", s, mi);
 #endif
   goto l2a;
 }
 
-bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R_norm) {
+bool add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d, size_t &iq,
+                    double &R_norm) {
   size_t n = J.rows();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';
 #endif
   size_t j, k;
@@ -337,7 +388,8 @@ bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R
     cc = d(j - 1);
     ss = d(j);
     h = distance(cc, ss);
-    if (h == 0.0) continue;
+    if (h == 0.0)
+      continue;
     d(j) = 0.0;
     ss = ss / h;
     cc = cc / h;
@@ -361,7 +413,7 @@ bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R
      into column iq - 1 of R
   */
   R.col(iq - 1).head(iq) = d.head(iq);
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << iq << std::endl;
 #endif
 
@@ -372,9 +424,10 @@ bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq, double& R
   return true;
 }
 
-void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_t p, size_t& iq, size_t l) {
+void delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A, VectorXd &u,
+                       size_t p, size_t &iq, size_t l) {
   size_t n = R.rows();
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Delete constraint " << l << ' ' << iq;
 #endif
   size_t i, j, k, qq = 0;
@@ -398,20 +451,23 @@ void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_
   u(iq - 1) = u(iq);
   A(iq) = 0;
   u(iq) = 0.0;
-  for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
+  for (j = 0; j < iq; j++)
+    R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
-#ifdef TRACE_SOLVER
+#ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << '/' << iq << std::endl;
 #endif
 
-  if (iq == 0) return;
+  if (iq == 0)
+    return;
 
   for (j = qq; j < iq; j++) {
     cc = R(j, j);
     ss = R(j + 1, j);
     h = distance(cc, ss);
-    if (h == 0.0) continue;
+    if (h == 0.0)
+      continue;
     cc = cc / h;
     ss = ss / h;
     R(j + 1, j) = 0.0;
@@ -438,5 +494,5 @@ void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u, size_
   }
 }
 
-}  // namespace solvers
-}  // namespace eiquadprog
+} // namespace solvers
+} // namespace eiquadprog
