@@ -16,11 +16,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <iostream>
-
 #include <Eigen/Core>
-
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 #include "eiquadprog/eiquadprog-fast.hpp"
 #include "eiquadprog/eiquadprog-rt.hpp"
