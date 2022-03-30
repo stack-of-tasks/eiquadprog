@@ -77,8 +77,6 @@
 #include <Eigen/Cholesky>
 #include <Eigen/Core>
 
-#include <iostream>
-
 #include "eiquadprog/deprecated.hpp"
 #include "eiquadprog/eiquadprog-utils.hxx"
 
