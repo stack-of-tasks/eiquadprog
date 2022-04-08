@@ -24,12 +24,21 @@ inline Scalar distance(Scalar a, Scalar b) {
 }
 
 template <class Derived>
-void print_vector(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
+void print_vector(const char *name, Eigen::MatrixBase<Derived> &x) {
   std::cerr << name << x.transpose() << std::endl;
 }
 template <class Derived>
-void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
+void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x) {
   std::cerr << name << std::endl << x << std::endl;
+}
+
+template <class Derived>
+void print_vector(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
+  print_vector(name, x);
+}
+template <class Derived>
+void print_matrix(const char *name, Eigen::MatrixBase<Derived> &x, int /*n*/) {
+  print_matrix(name, x);
 }
 
 }  // namespace utils

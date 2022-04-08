@@ -2,6 +2,7 @@
 
 [![Pipeline status](https://gitlab.laas.fr/stack-of-tasks/eiquadprog/badges/master/pipeline.svg)](https://gitlab.laas.fr/stack-of-tasks/eiquadprog/commits/master)
 [![Coverage report](https://gitlab.laas.fr/stack-of-tasks/eiquadprog/badges/master/coverage.svg?job=doc-coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/eiquadprog/master/coverage/)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/stack-of-tasks/eiquadprog/master.svg)](https://results.pre-commit.ci/latest/github/stack-of-tasks/eiquadprog/master)
 
 This repo contains different C++ implementations of the algorithm of Goldfarb and Idnani for the solution of a (convex) Quadratic Programming problem by means of a dual method.
 
