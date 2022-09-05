@@ -3,75 +3,81 @@
 #
 # This file is part of eiquadprog.
 #
-# eiquadprog is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# eiquadprog is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
 #
-# eiquadprog is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
+# eiquadprog is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+# details.
 #
-# You should have received a copy of the GNU Lesser General Public License
-# along with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Lesser General Public License along
+# with eiquadprog.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1)
 
 # Project properties
-SET(PROJECT_ORG stack-of-tasks)
-SET(PROJECT_NAME eiquadprog)
-SET(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
-SET(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
+set(PROJECT_ORG stack-of-tasks)
+set(PROJECT_NAME eiquadprog)
+set(PROJECT_DESCRIPTION "C++ reimplementation of eiquadprog")
+set(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 # Project options
-OPTION(TRACE_SOLVER "trace solver on stderr" OFF)
+option(TRACE_SOLVER "trace solver on stderr" OFF)
 
 # Project configuration
-SET(PROJECT_USE_CMAKE_EXPORT TRUE)
-SET(CXX_DISABLE_WERROR TRUE)
-SET(CMAKE_VERBOSE_MAKEFILE TRUE)
-SET(PROJECT_CUSTOM_HEADER_EXTENSION "hpp")
+set(PROJECT_USE_CMAKE_EXPORT TRUE)
+set(CXX_DISABLE_WERROR TRUE)
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
+set(PROJECT_CUSTOM_HEADER_EXTENSION "hpp")
 
 # JRL-cmakemodule setup
-INCLUDE(cmake/base.cmake)
-INCLUDE(cmake/boost.cmake)
+include(cmake/base.cmake)
+include(cmake/boost.cmake)
 
 # Project definition
-COMPUTE_PROJECT_ARGS(PROJECT_ARGS LANGUAGES CXX)
-PROJECT(${PROJECT_NAME} ${PROJECT_ARGS})
+compute_project_args(PROJECT_ARGS LANGUAGES CXX)
+project(${PROJECT_NAME} ${PROJECT_ARGS})
 
 # Project dependencies
-ADD_PROJECT_DEPENDENCY(Eigen3 REQUIRED)
-IF(BUILD_TESTING)
-  FIND_PACKAGE(Boost REQUIRED COMPONENTS unit_test_framework)
-ENDIF(BUILD_TESTING)
+add_project_dependency(Eigen3 REQUIRED)
+if(BUILD_TESTING)
+  find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+endif(BUILD_TESTING)
 
 # Main Library
-SET(${PROJECT_NAME}_HEADERS
-  include/${PROJECT_NAME}/eiquadprog.hpp
-  include/${PROJECT_NAME}/eiquadprog-fast.hpp
-  include/${PROJECT_NAME}/eiquadprog-rt.hpp
-  include/${PROJECT_NAME}/eiquadprog-rt.hxx
-  include/${PROJECT_NAME}/eiquadprog-utils.hxx
-  )
+set(${PROJECT_NAME}_HEADERS
+    include/${PROJECT_NAME}/eiquadprog.hpp
+    include/${PROJECT_NAME}/eiquadprog-fast.hpp
+    include/${PROJECT_NAME}/eiquadprog-rt.hpp
+    include/${PROJECT_NAME}/eiquadprog-rt.hxx
+    include/${PROJECT_NAME}/eiquadprog-utils.hxx)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED
-  src/eiquadprog-fast.cpp
-  src/eiquadprog.cpp
-  )
+add_library(${PROJECT_NAME} SHARED src/eiquadprog-fast.cpp src/eiquadprog.cpp)
 
-IF(TRACE_SOLVER)
-ENDIF(TRACE_SOLVER)
-  TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
+if(TRACE_SOLVER)
 
-MODERNIZE_TARGET_LINK_LIBRARIES(${PROJECT_NAME} SCOPE PUBLIC
-  TARGETS Eigen3::Eigen
-  INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
-TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
-INSTALL(TARGETS ${PROJECT_NAME} EXPORT ${TARGETS_EXPORT_NAME} DESTINATION lib)
+endif(TRACE_SOLVER)
+target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
 
-IF(BUILD_TESTING)
-  ADD_SUBDIRECTORY(tests)
-ENDIF(BUILD_TESTING)
+modernize_target_link_libraries(
+  ${PROJECT_NAME}
+  SCOPE
+  PUBLIC
+  TARGETS
+  Eigen3::Eigen
+  INCLUDE_DIRS
+  ${EIGEN3_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME}
+                           INTERFACE $<INSTALL_INTERFACE:include>)
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${TARGETS_EXPORT_NAME}
+  DESTINATION lib)
+
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif(BUILD_TESTING)
