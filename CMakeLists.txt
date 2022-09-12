@@ -59,9 +59,8 @@ set(${PROJECT_NAME}_HEADERS
 add_library(${PROJECT_NAME} SHARED src/eiquadprog-fast.cpp src/eiquadprog.cpp)
 
 if(TRACE_SOLVER)
-
+  target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
 endif(TRACE_SOLVER)
-target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
 
 modernize_target_link_libraries(
   ${PROJECT_NAME}
