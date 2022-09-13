@@ -120,11 +120,13 @@ double solve_quadprog(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower> &chol,
                       Eigen::VectorXd &y, Eigen::VectorXi &A, size_t &q);
 
 EIQUADPROG_DEPRECATED
-double solve_quadprog2(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower> &chol,
-                       double c1, Eigen::VectorXd &g0,
-                       const Eigen::MatrixXd &CE, const Eigen::VectorXd &ce0,
-                       const Eigen::MatrixXd &CI, const Eigen::VectorXd &ci0,
-                       Eigen::VectorXd &x, Eigen::VectorXi &A, size_t &q) {
+inline double solve_quadprog2(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower> &chol,
+                              double c1, Eigen::VectorXd &g0,
+                              const Eigen::MatrixXd &CE,
+                              const Eigen::VectorXd &ce0,
+                              const Eigen::MatrixXd &CI,
+                              const Eigen::VectorXd &ci0, Eigen::VectorXd &x,
+                              Eigen::VectorXi &A, size_t &q) {
   return solve_quadprog(chol, c1, g0, CE, ce0, CI, ci0, x, A, q);
 }
 
