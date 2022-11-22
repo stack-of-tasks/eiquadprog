@@ -29,9 +29,9 @@
 #define OPTIMIZE_HESSIAN_INVERSE  // use solveInPlace
 #define OPTIMIZE_UNCONSTR_MINIM
 
-//#define USE_WARM_START
-//#define PROFILE_EIQUADPROG
-//#define DEBUG_STREAM(msg) std::cout<<msg;
+// #define USE_WARM_START
+// #define PROFILE_EIQUADPROG
+// #define DEBUG_STREAM(msg) std::cout<<msg;
 #define DEBUG_STREAM(msg)
 
 #ifdef PROFILE_EIQUADPROG
