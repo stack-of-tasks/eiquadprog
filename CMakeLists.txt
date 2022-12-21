@@ -57,7 +57,8 @@ set(${PROJECT_NAME}_HEADERS
     include/${PROJECT_NAME}/eiquadprog-utils.hxx)
 
 add_library(${PROJECT_NAME} SHARED src/eiquadprog-fast.cpp src/eiquadprog.cpp)
-target_compile_options(${PROJECT_NAME} PRIVATE "-Wno-sign-conversion")  # We have a lot of implicit size_t to Eigen::Index conversions
+target_compile_options(${PROJECT_NAME} PRIVATE "-Wno-sign-conversion"
+)# We have a lot of implicit size_t to Eigen::Index conversions
 
 if(TRACE_SOLVER)
   target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
