@@ -27,6 +27,7 @@ set(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 # Project options
 option(TRACE_SOLVER "trace solver on stderr" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Project configuration
 set(PROJECT_USE_CMAKE_EXPORT TRUE)
@@ -56,7 +57,7 @@ set(${PROJECT_NAME}_HEADERS
     include/${PROJECT_NAME}/eiquadprog-rt.hxx
     include/${PROJECT_NAME}/eiquadprog-utils.hxx)
 
-add_library(${PROJECT_NAME} SHARED src/eiquadprog-fast.cpp src/eiquadprog.cpp)
+add_library(${PROJECT_NAME} src/eiquadprog-fast.cpp src/eiquadprog.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE "-Wno-sign-conversion"
 )# We have a lot of implicit size_t to Eigen::Index conversions
 
