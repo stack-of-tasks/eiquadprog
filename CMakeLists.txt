@@ -104,8 +104,8 @@ modernize_target_link_libraries(
   Eigen3::Eigen
   INCLUDE_DIRS
   ${EIGEN3_INCLUDE_DIR})
-target_include_directories(${PROJECT_NAME}
-                           INTERFACE $<INSTALL_INTERFACE:include>)
+target_include_directories(
+  ${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 install(
   TARGETS ${PROJECT_NAME}
   EXPORT ${TARGETS_EXPORT_NAME}
