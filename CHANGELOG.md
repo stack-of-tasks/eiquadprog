@@ -97,7 +97,8 @@ Changes since v0.0.3:
 
 Initial Release
 
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.2.7...HEAD
+[Unreleased]: https://github.com/stack-of-tasks/eiquadprog/compare/v1.2.8...HEAD
+[1.2.8]: https://github.com/stack-of-tasks/eiquadprog/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/stack-of-tasks/eiquadprog/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/stack-of-tasks/eiquadprog/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/stack-of-tasks/eiquadprog/v1.2.4...v1.2.5
@@ -111,4 +112,4 @@ Initial Release
 [1.1.1]: https://github.com/stack-of-tasks/eiquadprog/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/stack-of-tasks/eiquadprog/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/stack-of-tasks/eiquadprog/v0.0.3...v1.0.0
-[0.0.3]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.0.3
+[0.0.3]: https://github.com/stack-of-tasks/eiquadprog/releases/tag/v0.0.3
