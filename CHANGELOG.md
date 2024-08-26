@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.9] - 2024-08-26
+
 - allow use of installed jrl-cmakemodules
 - setup ROS CI
 
@@ -97,7 +99,8 @@ Changes since v0.0.3:
 
 Initial Release
 
-[Unreleased]: https://github.com/stack-of-tasks/eiquadprog/compare/v1.2.8...HEAD
+[Unreleased]: https://github.com/stack-of-tasks/eiquadprog/compare/v1.2.9...HEAD
+[1.2.9]: https://github.com/stack-of-tasks/eiquadprog/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/stack-of-tasks/eiquadprog/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/stack-of-tasks/eiquadprog/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/stack-of-tasks/eiquadprog/v1.2.5...v1.2.6
