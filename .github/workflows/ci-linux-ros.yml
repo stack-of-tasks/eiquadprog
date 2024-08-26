@@ -1,0 +1,26 @@
+name: CI - Linux - ROS
+on: [push, pull_request]
+
+jobs:
+  CI:
+    strategy:
+      matrix:
+        env:
+          - {ROS_DISTRO: noetic, BUILDER: catkin_tools}
+          - {ROS_DISTRO: rolling}
+          - {ROS_DISTRO: jazzy}
+          - {ROS_DISTRO: iron}
+          - {ROS_DISTRO: humble}
+    env:
+      CCACHE_DIR: /github/home/.ccache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ matrix.env.ROS_DISTRO }}
+      - uses: 'ros-industrial/industrial_ci@d23b9ad2c63bfad638a2b1fe3df34b8df9a2f17b'
+        env: ${{ matrix.env }}
