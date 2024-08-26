@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>eiquadprog</name>
-  <version>1.2.8</version>
+  <version>1.2.9</version>
   <description>
     Eiquadprog a QP solver using active sets
   </description>
