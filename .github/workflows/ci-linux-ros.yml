@@ -11,7 +11,7 @@ on:
     - devel
 
 jobs:
-  CI:
+  ROS:
     strategy:
       matrix:
         env:
