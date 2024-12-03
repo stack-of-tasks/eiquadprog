@@ -7,6 +7,7 @@ pull_request_rules:
       - check-success = "CI (rolling)"
       - check-success = "nix (macos)"
       - check-success = "nix (ubuntu)"
+      - check-success = "gitlab-ci"
       - check-success = "pre-commit.ci - pr"
       - or:
         - author = pre-commit-ci[bot]
