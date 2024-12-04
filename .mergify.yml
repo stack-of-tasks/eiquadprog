@@ -1,10 +1,10 @@
 pull_request_rules:
   - name: merge automatically when CI passes and PR is approved
     conditions:
-      - check-success = "CI (humble)"
-      - check-success = "CI (iron)"
-      - check-success = "CI (jazzy)"
-      - check-success = "CI (rolling)"
+      - check-success = "ROS (humble)"
+      - check-success = "ROS (iron)"
+      - check-success = "ROS (jazzy)"
+      - check-success = "ROS (rolling)"
       - check-success = "nix (macos)"
       - check-success = "nix (ubuntu)"
       - check-success = "gitlab-ci"

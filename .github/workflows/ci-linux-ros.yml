@@ -1,8 +1,17 @@
 name: CI - Linux - ROS
-on: [push, pull_request]
+
+on:
+  push:
+    branches:
+    - master
+    - devel
+  pull_request:
+    branches:
+    - master
+    - devel
 
 jobs:
-  CI:
+  ROS:
     strategy:
       matrix:
         env:
