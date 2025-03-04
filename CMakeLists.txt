@@ -73,6 +73,7 @@ include("${JRL_CMAKE_MODULES}/boost.cmake")
 # Project definition
 compute_project_args(PROJECT_ARGS LANGUAGES CXX)
 project(${PROJECT_NAME} ${PROJECT_ARGS})
+check_minimal_cxx_standard(14 ENFORCE)
 
 # Project dependencies
 add_project_dependency(Eigen3 REQUIRED)
