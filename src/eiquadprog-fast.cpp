@@ -42,8 +42,8 @@ void EiquadprogFast::reset(size_t nVars, size_t nEqCon, size_t nIneqCon) {
 #endif
 }
 
-bool EiquadprogFast::add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d,
-                                    size_t &iq, double &R_norm) {
+bool EiquadprogFast::add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d,
+                                    size_t& iq, double& R_norm) {
   size_t nVars = J.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';
@@ -117,8 +117,8 @@ into column iq - 1 of R
   return true;
 }
 
-void EiquadprogFast::delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A,
-                                       VectorXd &u, size_t nEqCon, size_t &iq,
+void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A,
+                                       VectorXd& u, size_t nEqCon, size_t& iq,
                                        size_t l) {
   size_t nVars = R.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
@@ -187,8 +187,8 @@ void EiquadprogFast::delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A,
 }
 
 EiquadprogFast_status EiquadprogFast::solve_quadprog(
-    const MatrixXd &Hess, const VectorXd &g0, const MatrixXd &CE,
-    const VectorXd &ce0, const MatrixXd &CI, const VectorXd &ci0, VectorXd &x) {
+    const MatrixXd& Hess, const VectorXd& g0, const MatrixXd& CE,
+    const VectorXd& ce0, const MatrixXd& CI, const VectorXd& ci0, VectorXd& x) {
   const size_t nVars = g0.size();
   const size_t nEqCon = ce0.size();
   const size_t nIneqCon = ci0.size();

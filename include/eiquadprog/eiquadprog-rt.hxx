@@ -39,9 +39,9 @@ RtEiquadprog<nVars, nEqCon, nIneqCon>::~RtEiquadprog() {}
 
 template <int nVars, int nEqCon, int nIneqCon>
 bool RtEiquadprog<nVars, nEqCon, nIneqCon>::add_constraint(
-    typename RtMatrixX<nVars, nVars>::d &R,
-    typename RtMatrixX<nVars, nVars>::d &J, typename RtVectorX<nVars>::d &d,
-    int &iq, double &R_norm) {
+    typename RtMatrixX<nVars, nVars>::d& R,
+    typename RtMatrixX<nVars, nVars>::d& J, typename RtVectorX<nVars>::d& d,
+    int& iq, double& R_norm) {
   //      int n=J.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';
@@ -117,10 +117,10 @@ into column iq - 1 of R
 
 template <int nVars, int nEqCon, int nIneqCon>
 void RtEiquadprog<nVars, nEqCon, nIneqCon>::delete_constraint(
-    typename RtMatrixX<nVars, nVars>::d &R,
-    typename RtMatrixX<nVars, nVars>::d &J,
-    typename RtVectorX<nIneqCon + nEqCon>::i &A,
-    typename RtVectorX<nIneqCon + nEqCon>::d &u, int &iq, int l) {
+    typename RtMatrixX<nVars, nVars>::d& R,
+    typename RtMatrixX<nVars, nVars>::d& J,
+    typename RtVectorX<nIneqCon + nEqCon>::i& A,
+    typename RtVectorX<nIneqCon + nEqCon>::d& u, int& iq, int l) {
   //      int n = J.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Delete constraint " << l << ' ' << iq;
@@ -189,13 +189,13 @@ void RtEiquadprog<nVars, nEqCon, nIneqCon>::delete_constraint(
 
 template <int nVars, int nEqCon, int nIneqCon>
 RtEiquadprog_status RtEiquadprog<nVars, nEqCon, nIneqCon>::solve_quadprog(
-    const typename RtMatrixX<nVars, nVars>::d &Hess,
-    const typename RtVectorX<nVars>::d &g0,
-    const typename RtMatrixX<nEqCon, nVars>::d &CE,
-    const typename RtVectorX<nEqCon>::d &ce0,
-    const typename RtMatrixX<nIneqCon, nVars>::d &CI,
-    const typename RtVectorX<nIneqCon>::d &ci0,
-    typename RtVectorX<nVars>::d &x) {
+    const typename RtMatrixX<nVars, nVars>::d& Hess,
+    const typename RtVectorX<nVars>::d& g0,
+    const typename RtMatrixX<nEqCon, nVars>::d& CE,
+    const typename RtVectorX<nEqCon>::d& ce0,
+    const typename RtMatrixX<nIneqCon, nVars>::d& CI,
+    const typename RtVectorX<nIneqCon>::d& ci0,
+    typename RtVectorX<nVars>::d& x) {
   int i, k, l;    // indices
   int ip;         // index of the chosen violated constraint
   int iq;         // current number of active constraints
