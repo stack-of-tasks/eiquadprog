@@ -6,10 +6,10 @@ using namespace Eigen;
 
 /* solve_quadprog is used for on-demand QP solving */
 
-double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
-                      const VectorXd &ce0, const MatrixXd &CI,
-                      const VectorXd &ci0, VectorXd &x, VectorXi &activeSet,
-                      size_t &activeSetSize) {
+double solve_quadprog(MatrixXd& G, VectorXd& g0, const MatrixXd& CE,
+                      const VectorXd& ce0, const MatrixXd& CI,
+                      const VectorXd& ci0, VectorXd& x, VectorXi& activeSet,
+                      size_t& activeSetSize) {
   Eigen::DenseIndex p = CE.cols();
   Eigen::DenseIndex m = CI.cols();
 
@@ -19,10 +19,10 @@ double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
                         activeSetSize);
 }
 
-double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
-                      const VectorXd &ce0, const MatrixXd &CI,
-                      const VectorXd &ci0, VectorXd &x, VectorXd &y,
-                      VectorXi &activeSet, size_t &activeSetSize) {
+double solve_quadprog(MatrixXd& G, VectorXd& g0, const MatrixXd& CE,
+                      const VectorXd& ce0, const MatrixXd& CI,
+                      const VectorXd& ci0, VectorXd& x, VectorXd& y,
+                      VectorXi& activeSet, size_t& activeSetSize) {
   LLT<MatrixXd, Lower> chol(G.cols());
   double c1;
   /* compute the trace of the original matrix G */
@@ -35,10 +35,10 @@ double solve_quadprog(MatrixXd &G, VectorXd &g0, const MatrixXd &CE,
                         activeSetSize);
 }
 
-double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
-                      const MatrixXd &CE, const VectorXd &ce0,
-                      const MatrixXd &CI, const VectorXd &ci0, VectorXd &x,
-                      VectorXi &activeSet, size_t &activeSetSize) {
+double solve_quadprog(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0,
+                      const MatrixXd& CE, const VectorXd& ce0,
+                      const MatrixXd& CI, const VectorXd& ci0, VectorXd& x,
+                      VectorXi& activeSet, size_t& activeSetSize) {
   Eigen::DenseIndex p = CE.cols();
   Eigen::DenseIndex m = CI.cols();
 
@@ -53,10 +53,10 @@ double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
  * @param A Output vector containing the indexes of the active constraints.
  * @param q Output value representing the size of the active set.
  */
-double solve_quadprog(LLT<MatrixXd, Lower> &chol, double c1, VectorXd &g0,
-                      const MatrixXd &CE, const VectorXd &ce0,
-                      const MatrixXd &CI, const VectorXd &ci0, VectorXd &x,
-                      VectorXd &u, VectorXi &A, size_t &q) {
+double solve_quadprog(LLT<MatrixXd, Lower>& chol, double c1, VectorXd& g0,
+                      const MatrixXd& CE, const VectorXd& ce0,
+                      const MatrixXd& CI, const VectorXd& ci0, VectorXd& x,
+                      VectorXd& u, VectorXi& A, size_t& q) {
   size_t i, k, l; /* indices */
   size_t ip, me, mi;
   size_t n = g0.size();
@@ -358,8 +358,8 @@ l2a: /* Step 2a: determine step direction */
   goto l2a;
 }
 
-bool add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d, size_t &iq,
-                    double &R_norm) {
+bool add_constraint(MatrixXd& R, MatrixXd& J, VectorXd& d, size_t& iq,
+                    double& R_norm) {
   size_t n = J.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Add constraint " << iq << '/';
@@ -418,8 +418,8 @@ bool add_constraint(MatrixXd &R, MatrixXd &J, VectorXd &d, size_t &iq,
   return true;
 }
 
-void delete_constraint(MatrixXd &R, MatrixXd &J, VectorXi &A, VectorXd &u,
-                       size_t p, size_t &iq, size_t l) {
+void delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A, VectorXd& u,
+                       size_t p, size_t& iq, size_t l) {
   size_t n = R.rows();
 #ifdef EIQGUADPROG_TRACE_SOLVER
   std::cerr << "Delete constraint " << l << ' ' << iq;

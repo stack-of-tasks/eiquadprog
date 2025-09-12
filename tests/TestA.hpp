@@ -21,7 +21,7 @@ class A {
   eiquadprog::solvers::EiquadprogFast QP_;
 
   A();
-  eiquadprog::solvers::EiquadprogFast_status solve(Eigen::VectorXd &x);
+  eiquadprog::solvers::EiquadprogFast_status solve(Eigen::VectorXd& x);
 };
 
 }  // namespace tests
