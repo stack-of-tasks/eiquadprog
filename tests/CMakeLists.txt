@@ -25,9 +25,8 @@ foreach(test ${TESTS})
   add_unit_test(${test} ${test}.cpp)
   target_link_libraries(${test} ${PROJECT_NAME} Boost::unit_test_framework)
   if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-    target_compile_options(
-      ${test} PRIVATE "-Wno-sign-conversion") # We have a lot of implicit size_t
-                                              # to Eigen::Index conversions
+    target_compile_options(${test} PRIVATE "-Wno-sign-conversion"
+    )# We have a lot of implicit size_t to Eigen::Index conversions
   endif()
 endforeach(test ${TESTS})
 
