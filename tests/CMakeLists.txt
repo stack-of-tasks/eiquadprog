@@ -24,14 +24,18 @@ set(TESTS eiquadprog-basic eiquadprog-fast eiquadprog-rt eiquadprog-both
 foreach(test ${TESTS})
   add_unit_test(${test} ${test}.cpp)
   target_link_libraries(${test} ${PROJECT_NAME} Boost::unit_test_framework)
-  target_compile_options(
-    ${test} PRIVATE "-Wno-sign-conversion") # We have a lot of implicit size_t
-                                            # to Eigen::Index conversions
+  if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+    target_compile_options(
+      ${test} PRIVATE "-Wno-sign-conversion") # We have a lot of implicit size_t
+                                              # to Eigen::Index conversions
+  endif()
 endforeach(test ${TESTS})
 
 add_library(testab SHARED TestA.cpp TestB.cpp)
 target_link_libraries(testab ${PROJECT_NAME})
 target_link_libraries(test-integration testab)
-target_compile_options(
-  testab PRIVATE "-Wno-sign-conversion") # We have a lot of implicit size_t to
-                                         # Eigen::Index conversions
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+  target_compile_options(
+    testab PRIVATE "-Wno-sign-conversion") # We have a lot of implicit size_t to
+                                           # Eigen::Index conversions
+endif()
