@@ -1,16 +1,13 @@
 pull_request_rules:
-  - name: merge automatically when CI passes and PR is approved
+  - name: merge [bot] PRs when CI pass
     conditions:
-      - check-success = "ROS (humble)"
-      - check-success = "ROS (iron)"
-      - check-success = "ROS (jazzy)"
-      - check-success = "ROS (rolling)"
-      - check-success = "nix (macos)"
-      - check-success = "nix (ubuntu)"
-      - check-success = "gitlab-ci"
+      - check-success = "check-macos-linux-nix"
+      - check-success = "check-linux-ros"
       - check-success = "pre-commit.ci - pr"
       - or:
-        - author = pre-commit-ci[bot]
-        - author = dependabot[bot]
+          - author = dependabot[bot]
+          - author = github-actions[bot]
+          - author = hrp2-14
+          - author = pre-commit-ci[bot]
     actions:
       merge:
