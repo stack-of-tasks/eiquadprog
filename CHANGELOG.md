@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - :warning: require C++ >= 14
+- setup nix packaging & CI
+- setup mergify
+- Only add GCC Clang warnings options in GCC/Clang
+- update for jrl-cmakemodules v1
 
 ## [1.2.9] - 2024-08-26
 
