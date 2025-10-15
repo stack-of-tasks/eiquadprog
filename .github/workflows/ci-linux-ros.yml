@@ -16,8 +16,8 @@ jobs:
       matrix:
         env:
           - {ROS_DISTRO: rolling}
+          - {ROS_DISTRO: kilted}
           - {ROS_DISTRO: jazzy}
-          - {ROS_DISTRO: iron}
           - {ROS_DISTRO: humble}
     env:
       CCACHE_DIR: /github/home/.ccache
