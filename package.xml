@@ -8,7 +8,7 @@
   <maintainer email="guilhem.saurel@laas.fr">Guilhem Saurel</maintainer>
   <license>LGPLv3</license>
 
-  <url>git@github.com:stack-of-tasks/eiquadprog.git</url>
+  <url>https://github.com/stack-of-tasks/eiquadprog</url>
   <author>Gabriele Buondonno</author>
   <author>Andrea Del Prete</author>
   <author>Luca Di Gaspero</author>
@@ -18,8 +18,7 @@
 
   <build_depend>git</build_depend>
   <build_depend>doxygen</build_depend>
-  <!-- The following tags are recommended by REP-136 -->
-  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
+  <build_depend>jrl_cmakemodules</build_depend>
   <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>
   <depend>boost</depend>
   <depend>eigen</depend>
