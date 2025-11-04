@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - ROS: jrl_cmakemodules dependency
+- Ensure symbols are correctly exported on Windows
 
-## [1.3.0] - 1980-01-01
+## [1.3.0] - 2025-09-29
 
 - :warning: require C++ >= 14
 - setup nix packaging & CI
