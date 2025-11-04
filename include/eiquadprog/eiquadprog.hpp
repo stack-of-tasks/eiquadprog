@@ -77,6 +77,7 @@
 #include <Eigen/Cholesky>
 #include <Eigen/Core>
 
+#include "eiquadprog/config.hpp"
 #include "eiquadprog/deprecated.hpp"
 #include "eiquadprog/eiquadprog-utils.hxx"
 
@@ -107,13 +108,13 @@ void delete_constraint(Eigen::MatrixXd& R, Eigen::MatrixXd& J,
                        Eigen::VectorXi& A, Eigen::VectorXd& u, size_t p,
                        size_t& iq, size_t l);
 
-double solve_quadprog(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
+EIQUADPROG_DLLAPI double solve_quadprog(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
                       double c1, Eigen::VectorXd& g0, const Eigen::MatrixXd& CE,
                       const Eigen::VectorXd& ce0, const Eigen::MatrixXd& CI,
                       const Eigen::VectorXd& ci0, Eigen::VectorXd& x,
                       Eigen::VectorXi& A, size_t& q);
 
-double solve_quadprog(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
+EIQUADPROG_DLLAPI double solve_quadprog(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
                       double c1, Eigen::VectorXd& g0, const Eigen::MatrixXd& CE,
                       const Eigen::VectorXd& ce0, const Eigen::MatrixXd& CI,
                       const Eigen::VectorXd& ci0, Eigen::VectorXd& x,
@@ -131,13 +132,13 @@ inline double solve_quadprog2(Eigen::LLT<Eigen::MatrixXd, Eigen::Lower>& chol,
 }
 
 /* solve_quadprog is used for on-demand QP solving */
-double solve_quadprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
+EIQUADPROG_DLLAPI double solve_quadprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
                       const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0,
                       const Eigen::MatrixXd& CI, const Eigen::VectorXd& ci0,
                       Eigen::VectorXd& x, Eigen::VectorXi& activeSet,
                       size_t& activeSetSize);
 
-double solve_quadprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
+EIQUADPROG_DLLAPI double solve_quadprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
                       const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0,
                       const Eigen::MatrixXd& CI, const Eigen::VectorXd& ci0,
                       Eigen::VectorXd& x, Eigen::VectorXd& y,
