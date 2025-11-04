@@ -102,10 +102,7 @@ modernize_target_link_libraries(
   ${EIGEN3_INCLUDE_DIR})
 target_include_directories(
   ${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-install(
-  TARGETS ${PROJECT_NAME}
-  EXPORT ${TARGETS_EXPORT_NAME}
-  DESTINATION lib)
+install(TARGETS ${PROJECT_NAME} EXPORT ${TARGETS_EXPORT_NAME})
 
 if(BUILD_TESTING)
   add_subdirectory(tests)

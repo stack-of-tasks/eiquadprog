@@ -31,6 +31,10 @@ foreach(test ${TESTS})
 endforeach(test ${TESTS})
 
 add_library(testab SHARED TestA.cpp TestB.cpp)
+# testab is just a test shared library, so on Windows we export the symbols with
+# WINDOWS_EXPORT_ALL_SYMBOLS
+set_target_properties(testab PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 target_link_libraries(testab ${PROJECT_NAME})
 target_link_libraries(test-integration testab)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
