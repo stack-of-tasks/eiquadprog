@@ -1,0 +1,7 @@
+[jrl-cmakemodules]
+url = "github:jrl-umi3218"
+
+[eiquadprog]
+url = "."
+apt_deps = ["libboost-all-dev", "libeigen3-dev"]
+src_deps = ["jrl-cmakemodules"]
