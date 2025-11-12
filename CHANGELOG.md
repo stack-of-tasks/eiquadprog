@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- setup dockgen
+
 ## [1.3.1] - 2025-11-04
 
 - ROS: jrl_cmakemodules dependency
