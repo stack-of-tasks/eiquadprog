@@ -38,24 +38,32 @@ set(PROJECT_CUSTOM_HEADER_EXTENSION "hpp")
 # Check if the submodule cmake have been initialized
 set(JRL_CMAKE_MODULES "${CMAKE_CURRENT_LIST_DIR}/cmake")
 if(EXISTS "${JRL_CMAKE_MODULES}/base.cmake")
-  message(STATUS "JRL cmakemodules found in 'cmake/' git submodule")
+    message(STATUS "JRL cmakemodules found in 'cmake/' git submodule")
 else()
-  find_package(jrl-cmakemodules QUIET CONFIG)
-  if(jrl-cmakemodules_FOUND)
-    get_property(
-      JRL_CMAKE_MODULES
-      TARGET jrl-cmakemodules::jrl-cmakemodules
-      PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-    message(STATUS "JRL cmakemodules found on system at ${JRL_CMAKE_MODULES}")
-  else()
-    message(STATUS "JRL cmakemodules not found. Let's fetch it.")
-    include(FetchContent)
-    FetchContent_Declare(
-      "jrl-cmakemodules"
-      GIT_REPOSITORY "https://github.com/jrl-umi3218/jrl-cmakemodules.git")
-    FetchContent_MakeAvailable("jrl-cmakemodules")
-    FetchContent_GetProperties("jrl-cmakemodules" SOURCE_DIR JRL_CMAKE_MODULES)
-  endif()
+    find_package(jrl-cmakemodules QUIET CONFIG)
+    if(jrl-cmakemodules_FOUND)
+        get_property(
+            JRL_CMAKE_MODULES
+            TARGET jrl-cmakemodules::jrl-cmakemodules
+            PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        )
+        message(
+            STATUS
+            "JRL cmakemodules found on system at ${JRL_CMAKE_MODULES}"
+        )
+    else()
+        message(STATUS "JRL cmakemodules not found. Let's fetch it.")
+        include(FetchContent)
+        FetchContent_Declare(
+            "jrl-cmakemodules"
+            GIT_REPOSITORY "https://github.com/jrl-umi3218/jrl-cmakemodules.git"
+        )
+        FetchContent_MakeAvailable("jrl-cmakemodules")
+        FetchContent_GetProperties(
+            "jrl-cmakemodules"
+            SOURCE_DIR JRL_CMAKE_MODULES
+        )
+    endif()
 endif()
 
 # JRL-cmakemodule setup
@@ -70,7 +78,7 @@ check_minimal_cxx_standard(14 ENFORCE)
 # Project dependencies
 add_project_dependency(Eigen3 REQUIRED)
 if(BUILD_TESTING)
-  find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+    find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 endif(BUILD_TESTING)
 
 # Main Library
@@ -79,17 +87,18 @@ set(${PROJECT_NAME}_HEADERS
     include/${PROJECT_NAME}/eiquadprog-fast.hpp
     include/${PROJECT_NAME}/eiquadprog-rt.hpp
     include/${PROJECT_NAME}/eiquadprog-rt.hxx
-    include/${PROJECT_NAME}/eiquadprog-utils.hxx)
+    include/${PROJECT_NAME}/eiquadprog-utils.hxx
+)
 
 add_library(${PROJECT_NAME} src/eiquadprog-fast.cpp src/eiquadprog.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  # We have a lot of implicit size_t to Eigen::Index conversions
-  target_compile_options(${PROJECT_NAME} PRIVATE "-Wno-sign-conversion")
+    # We have a lot of implicit size_t to Eigen::Index conversions
+    target_compile_options(${PROJECT_NAME} PRIVATE "-Wno-sign-conversion")
 endif()
 
 if(TRACE_SOLVER)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE EIQGUADPROG_TRACE_SOLVER)
 endif(TRACE_SOLVER)
 
 modernize_target_link_libraries(
@@ -99,11 +108,14 @@ modernize_target_link_libraries(
   TARGETS
   Eigen3::Eigen
   INCLUDE_DIRS
-  ${EIGEN3_INCLUDE_DIR})
+  ${EIGEN3_INCLUDE_DIR}
+)
 target_include_directories(
-  ${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    ${PROJECT_NAME}
+    INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 install(TARGETS ${PROJECT_NAME} EXPORT ${TARGETS_EXPORT_NAME})
 
 if(BUILD_TESTING)
-  add_subdirectory(tests)
+    add_subdirectory(tests)
 endif(BUILD_TESTING)

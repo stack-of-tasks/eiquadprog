@@ -18,16 +18,21 @@
 add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 # test paths and names (without .cpp extension)
-set(TESTS eiquadprog-basic eiquadprog-fast eiquadprog-rt eiquadprog-both
-          test-integration)
+set(TESTS
+    eiquadprog-basic
+    eiquadprog-fast
+    eiquadprog-rt
+    eiquadprog-both
+    test-integration
+)
 
 foreach(test ${TESTS})
-  add_unit_test(${test} ${test}.cpp)
-  target_link_libraries(${test} ${PROJECT_NAME} Boost::unit_test_framework)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    # We have a lot of implicit size_t to Eigen::Index conversions
-    target_compile_options(${test} PRIVATE "-Wno-sign-conversion")
-  endif()
+    add_unit_test(${test} ${test}.cpp)
+    target_link_libraries(${test} ${PROJECT_NAME} Boost::unit_test_framework)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        # We have a lot of implicit size_t to Eigen::Index conversions
+        target_compile_options(${test} PRIVATE "-Wno-sign-conversion")
+    endif()
 endforeach(test ${TESTS})
 
 add_library(testab SHARED TestA.cpp TestB.cpp)
@@ -38,6 +43,6 @@ set_target_properties(testab PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 target_link_libraries(testab ${PROJECT_NAME})
 target_link_libraries(test-integration testab)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  # We have a lot of implicit size_t to Eigen::Index conversions
-  target_compile_options(testab PRIVATE "-Wno-sign-conversion")
+    # We have a lot of implicit size_t to Eigen::Index conversions
+    target_compile_options(testab PRIVATE "-Wno-sign-conversion")
 endif()
