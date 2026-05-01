@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: 'ros-industrial/industrial_ci@0f4bd2d1b926eac95fd6bc5bd1fcb3051a6e927d'
+      - uses: 'ros-industrial/industrial_ci@f3c2dc8b4a9e6215f9c00f83e86ca0692970f81d'
         env: ${{ matrix.env }}
   check:
     if: always()
