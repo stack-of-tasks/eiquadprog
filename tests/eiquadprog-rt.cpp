@@ -474,4 +474,49 @@ BOOST_AUTO_TEST_CASE(test_nonconvex) {
   BOOST_WARN(x.isApprox(solution));
 }
 
+// min ||x||^2
+//    s.t.
+// 1e10 x[0] = 0
+// 1e-7 x[1] - 1e-7 >= 0
+// Beside the equality's norm, the inequality looks linearly dependent once the
+// full step onto it is taken, so it is rejected and the active set restored,
+// with every constraint active. The restore must count towards the iterations.
+
+BOOST_AUTO_TEST_CASE(test_degenerate_inequality,
+                     *boost::unit_test::timeout(10)) {
+  RtEiquadprog<2, 1, 1> qp;
+  qp.setMaxIter(100);
+
+  RtMatrixX<2, 2>::d Q;
+  Q.setIdentity();
+
+  RtVectorX<2>::d C;
+  C.setZero();
+
+  RtMatrixX<1, 2>::d Aeq;
+  Aeq(0, 0) = 1e10;
+  Aeq(0, 1) = 0.;
+
+  RtVectorX<1>::d Beq;
+  Beq(0) = 0.;
+
+  RtMatrixX<1, 2>::d Aineq;
+  Aineq(0, 0) = 0.;
+  Aineq(0, 1) = 1e-7;
+
+  RtVectorX<1>::d Bineq;
+  Bineq(0) = -1e-7;
+
+  RtVectorX<2>::d x;
+
+  RtEiquadprog_status expected = RT_EIQUADPROG_MAX_ITER_REACHED;
+
+  RtEiquadprog_status status =
+      qp.solve_quadprog(Q, C, Aeq, Beq, Aineq, Bineq, x);
+
+  BOOST_CHECK_EQUAL(status, expected);
+
+  BOOST_CHECK_EQUAL(qp.getIteratios(), qp.getMaxIter());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
