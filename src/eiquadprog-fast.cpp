@@ -143,10 +143,12 @@ void EiquadprogFast::delete_constraint(MatrixXd& R, MatrixXd& J, VectorXi& A,
     R.col(i) = R.col(i + 1);
   }
 
-  A(iq - 1) = A(iq);
-  u(iq - 1) = u(iq);
-  A(iq) = 0;
-  u(iq) = 0.0;
+  if (iq < static_cast<size_t>(A.size())) {
+    A(iq - 1) = A(iq);
+    u(iq - 1) = u(iq);
+    A(iq) = 0;
+    u(iq) = 0.0;
+  }
   for (j = 0; j < iq; j++) R(j, iq - 1) = 0.0;
   /* constraint has been fully removed */
   iq--;
@@ -581,11 +583,16 @@ l2a: /* Step 2a: determine step direction */
       for (i = 0; i < nIneqCon; i++) iai(i) = static_cast<VectorXi::Scalar>(i);
       for (i = 0; i < iq; i++) {
         A(i) = A_old(i);
-        iai(A(i)) = -1;
         u(i) = u_old(i);
       }
+      for (i = nEqCon; i < iq; i++) iai(A(i)) = -1;
       x = x_old;
       STOP_PROFILER_EIQUADPROG_FAST(EIQUADPROG_FAST_STEP_2C);
+      iter++;
+      if (iter >= m_maxIter) {
+        q = iq;
+        return EIQUADPROG_FAST_MAX_ITER_REACHED;
+      }
       goto l2; /* go to step 2 */
     } else
       iai(ip) = -1;

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix an infinite loop and out-of-bounds accesses in `EiquadprogFast` and `RtEiquadprog` when a constraint is rejected as linearly dependent
+
 ## [1.3.2] - 2026-04-14
 
 - setup dockgen
